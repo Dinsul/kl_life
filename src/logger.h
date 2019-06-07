@@ -48,15 +48,22 @@ inline std::string cat(){
     return std::stringstream().str();
 }
 
-inline std::string cat(char){
-    return std::stringstream().str();
-}
-
-
 template <class T, class ... Args>
 auto cat(T&& cur, Args&& ... args){
     std::stringstream str;
     str << cur << cat(std::forward<Args>(args)...);
+    return str.str();
+}
+
+
+inline std::string cat(char){
+    return std::stringstream().str();
+}
+
+template <class T>
+auto cat(char, T&& cur){
+    std::stringstream str;
+    str << cur;
     return str.str();
 }
 

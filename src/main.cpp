@@ -3,13 +3,18 @@
 
 #include "info.h"
 #include "logger.h"
+#include "settings.h"
 
 #include <thread>
 #include <chrono>
 
 int main(int argc, char* argv[])
 {
-    std::cout << PRJ_NAME << " Version " << PRJ_VERSION << std::endl;
+    auto &settings       = CGL::Settings::get();
+    settings.logLevel    = CGL::Settings::LogLevel::trace;
+    settings.logToStdout = true;
+
+    CGL::Logger::info(CGL::makeStr(PRJ_NAME, "Version", PRJ_VERSION));
 
     sf::RenderWindow App(sf::VideoMode(800, 600), PRJ_NAME);
 
@@ -24,4 +29,6 @@ int main(int argc, char* argv[])
         std::this_thread::sleep_for(std::chrono::milliseconds(2));
         App.clear();
     }
+
+    settings.save();
 }

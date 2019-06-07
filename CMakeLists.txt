@@ -56,7 +56,6 @@ conan_cmake_run(REQUIRES
     boost:without_type_erasure=True
     boost:without_chrono=True
     boost:without_timer=True
-    boost:without_filesystem=True
     boost:without_math=True
 
     sfml:audio=False
@@ -98,10 +97,14 @@ add_custom_target("sundries"
     "CHANGELOG.md"
     )
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
+
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory("src")
 add_subdirectory("tests")
 
+enable_testing()
 
-add_test(test_all "test_run")
+add_test(test_all "${CMAKE_BINARY_DIR}/bin/test_run" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_settings" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

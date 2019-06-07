@@ -13,7 +13,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::file_log()
     static std::shared_ptr<spdlog::logger> _fileLogger;
     if (!_fileLogger)
     {
-        boost::filesystem::path logPath(LogSettings::get().logPath);
+        boost::filesystem::path logPath(Settings::get().logPath);
 
         // Проверяем существование директории
         // Если такой нет, создаём
@@ -21,11 +21,11 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::file_log()
             boost::filesystem::create_directories(logPath);
         }
 
-        logPath.append(cat('.', PRJ_NAME, "log"));
+        logPath.append(PRJ_NAME".log");
 
         _fileLogger = spdlog::daily_logger_mt(PRJ_NAME, logPath.string());
 
-        _fileLogger->set_level(static_cast<spdlog::level::level_enum>(LogSettings::get().logLevel));
+        _fileLogger->set_level(static_cast<spdlog::level::level_enum>(Settings::get().logLevel));
 
         // Информацию о запуске пишем всегда
         _fileLogger->set_pattern("\n--~==# %H:%M:%S.%e %v #==~--");
@@ -42,7 +42,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::last_log()
     static std::shared_ptr<spdlog::logger> _lastLogger;
     if (!_lastLogger)
     {
-        boost::filesystem::path logPath(LogSettings::get().logPath);
+        boost::filesystem::path logPath(Settings::get().logPath);
 
         // Проверяем существование директории
         // Если такой нет, создаём
@@ -50,7 +50,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::last_log()
             boost::filesystem::create_directories(logPath);
         }
 
-        logPath.append(cat('.', PRJ_NAME, "last", "log"));
+        logPath.append(PRJ_NAME"_last.log");
 
         _lastLogger = spdlog::basic_logger_st(PRJ_NAME"_last", logPath.string(), true);
 
@@ -60,7 +60,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::last_log()
 
         _lastLogger->set_pattern("%H:%M:%S.%e [%l] %v");
 
-        _lastLogger->set_level(static_cast<spdlog::level::level_enum>(LogSettings::get().logLevel));
+        _lastLogger->set_level(static_cast<spdlog::level::level_enum>(Settings::get().logLevel));
     }
 
     return _lastLogger;
@@ -75,7 +75,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::stdout_log()
         _constd = spdlog::stdout_logger_mt("stdout");
 
         _constd->set_pattern("%H:%M:%S.%e [%l] %v");
-        _constd->set_level(static_cast<spdlog::level::level_enum>(LogSettings::get().logLevel));
+        _constd->set_level(static_cast<spdlog::level::level_enum>(Settings::get().logLevel));
     }
 
     return _constd;
@@ -90,7 +90,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::stderr_log()
         _conerr = spdlog::stderr_logger_mt("stderr");
 
         _conerr->set_pattern("%H:%M:%S.%e [%l] %v");
-        _conerr->set_level(static_cast<spdlog::level::level_enum>(LogSettings::get().logLevel));
+        _conerr->set_level(static_cast<spdlog::level::level_enum>(Settings::get().logLevel));
     }
 
     return _conerr;
@@ -98,16 +98,16 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::stderr_log()
 
 void CGL::Logger::trace(const std::string &msg)
 {
-    if (LogSettings::get().logToFile) {
+    if (Settings::get().logToFile) {
         file_log()->trace(msg);
         file_log()->flush();
     }
 
-    if (LogSettings::get().logToStdout) {
+    if (Settings::get().logToStdout) {
         stdout_log()->trace(msg);
     }
 
-    if (LogSettings::get().logLast) {
+    if (Settings::get().logLast) {
         last_log()->trace(msg);
         last_log()->flush();
     }
@@ -115,16 +115,16 @@ void CGL::Logger::trace(const std::string &msg)
 
 void CGL::Logger::debug(const std::string &msg)
 {
-    if (LogSettings::get().logToFile) {
+    if (Settings::get().logToFile) {
         file_log()->debug(msg);
         file_log()->flush();
     }
 
-    if (LogSettings::get().logToStdout) {
+    if (Settings::get().logToStdout) {
         stdout_log()->debug(msg);
     }
 
-    if (LogSettings::get().logLast) {
+    if (Settings::get().logLast) {
         last_log()->debug(msg);
         last_log()->flush();
     }
@@ -132,16 +132,16 @@ void CGL::Logger::debug(const std::string &msg)
 
 void CGL::Logger::info(const std::string &msg)
 {
-    if (LogSettings::get().logToFile) {
+    if (Settings::get().logToFile) {
         file_log()->info(msg);
         file_log()->flush();
     }
 
-    if (LogSettings::get().logToStdout) {
+    if (Settings::get().logToStdout) {
         stdout_log()->info(msg);
     }
 
-    if (LogSettings::get().logLast) {
+    if (Settings::get().logLast) {
         last_log()->info(msg);
         last_log()->flush();
     }
@@ -149,16 +149,16 @@ void CGL::Logger::info(const std::string &msg)
 
 void CGL::Logger::warning(const std::string &msg)
 {
-    if (LogSettings::get().logToFile) {
+    if (Settings::get().logToFile) {
         file_log()->warn(msg);
         file_log()->flush();
     }
 
-    if (LogSettings::get().logToStdout) {
+    if (Settings::get().logToStdout) {
         stderr_log()->warn(msg);
     }
 
-    if (LogSettings::get().logLast) {
+    if (Settings::get().logLast) {
         last_log()->warn(msg);
         last_log()->flush();
     }
@@ -166,16 +166,16 @@ void CGL::Logger::warning(const std::string &msg)
 
 void CGL::Logger::error(const std::string &msg)
 {
-    if (LogSettings::get().logToFile) {
+    if (Settings::get().logToFile) {
         file_log()->error(msg);
         file_log()->flush();
     }
 
-    if (LogSettings::get().logToStdout) {
+    if (Settings::get().logToStdout) {
         stderr_log()->error(msg);
     }
 
-    if (LogSettings::get().logLast) {
+    if (Settings::get().logLast) {
         last_log()->error(msg);
         last_log()->flush();
     }
