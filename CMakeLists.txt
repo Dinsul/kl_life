@@ -98,6 +98,8 @@ add_custom_target("sundries"
     "CHANGELOG.md"
     )
 
+link_libraries(${CMAKE_THREAD_LIBS_INIT})
+
 add_subdirectory("src")
 add_subdirectory("tests")
 
