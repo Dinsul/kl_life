@@ -4,7 +4,7 @@ project(life)
 
 set(PROJECT_VERSION_MAJOR "0")
 set(PROJECT_VERSION_MINOR "0")
-set(PROJECT_VERSION_PATCH "1")
+set(PROJECT_VERSION_PATCH "2")
 
 if ($ENV{TRAVIS_BUILD_NUMBER})
     set(PROJECT_VERSION_TWEAK $ENV{TRAVIS_BUILD_NUMBER})
@@ -91,8 +91,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_custom_target("sundries"
     SOURCES
     ".travis.yml"
+    ".gitignore"
     "info.h.in"
     "resources.rc.in"
+    "README.md"
+    "CHANGELOG.md"
     )
 
 add_subdirectory("src")

@@ -6,6 +6,7 @@ configure_file("${PROJECT_SOURCE_DIR}/info.h.in" "${PROJECT_SOURCE_DIR}/src/info
 
 add_executable("${PROJECT_NAME}"
     "${PROJECT_SOURCE_DIR}/src/main.cpp"
+    "${PROJECT_SOURCE_DIR}/src/settings.cpp"
     )
 
 if (WIN32)
