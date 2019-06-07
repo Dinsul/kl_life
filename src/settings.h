@@ -32,31 +32,6 @@ class Settings
 
     void operator =(Settings&) = delete;
 
-
-public:
-
-    static Settings &get();
-};
-
-
-//!
-//! \brief The LogSettings class
-//! Это класс который содержит параметры журналирования
-//!
-//! Для журналирования существует отдельный класс, так как
-//! журналирование должно быть настроенно до создания
-//! экземпляра настроек игры.
-//!
-//! Использование идентично \link Settings \endlink
-//!
-class LogSettings
-{
-    LogSettings();
-    LogSettings(Settings&) = delete;
-
-    void operator =(LogSettings&) = delete;
-
-
 public:
     enum class LogLevel {
         trace    = 0,
@@ -74,7 +49,11 @@ public:
 
     std::string logPath;
 
-    static LogSettings &get();
+    static Settings &get();
+    void load(const std::string &filename);
+    void load();
+    void save(const std::string &filename);
+    void save();
 };
 
 } // CGL
