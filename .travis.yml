@@ -7,6 +7,7 @@ before_script:
 - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_10_0.deb
 - sudo dpkg -i conan-ubuntu-64_1_10_0.deb
 script:
+- conan remote add sfml_bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 - cmake . -DCMAKE_BUILD_TYPE=Release
 - cmake --build .
 - cmake --build . --target test
