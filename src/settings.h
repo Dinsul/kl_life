@@ -25,6 +25,7 @@ namespace CGL {
 //!
 //! \endcode
 //!
+//! \todo Убрать load() из конструктора. Сделать значения поумолчанию.
 class Settings
 {
     Settings();

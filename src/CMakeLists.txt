@@ -8,6 +8,9 @@ add_executable("${PROJECT_NAME}"
     "${PROJECT_SOURCE_DIR}/src/main.cpp"
     "${PROJECT_SOURCE_DIR}/src/settings.cpp"
     "${PROJECT_SOURCE_DIR}/src/logger.cpp"
+    "${PROJECT_SOURCE_DIR}/src/simpleuniverse.cpp"
+    "${PROJECT_SOURCE_DIR}/src/life_types.hpp"
+    "${PROJECT_SOURCE_DIR}/src/universe.h"
     )
 
 if (WIN32)
@@ -21,8 +24,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" ST
         COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
         )
 endif()
-
-message(">>>>>>>>>>${CONAN_LIBS}\n\n")
 
 target_link_libraries(${PROJECT_NAME}
     "${CONAN_LIBS}" "sfml-graphics" "sfml-window"

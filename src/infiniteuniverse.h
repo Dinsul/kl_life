@@ -1,11 +1,26 @@
 #ifndef INFINITEUNIVERSE_H
 #define INFINITEUNIVERSE_H
 
+#include "universe.h"
 
-class infiniteUniverse : public Universe
+
+namespace CGL {
+
+
+class InfiniteUniverse : public Universe
 {
 public:
-    infiniteUniverse();
+    InfiniteUniverse();
+
+public:
+    // Universe interface
+    unsigned int height() override;
+    unsigned int width() override;
+    void nextGeneration() override;
+    void addCell(const Position &pos) override;
+    void draw(sf::RenderWindow &window) override;
 };
+
+}
 
 #endif // INFINITEUNIVERSE_H
