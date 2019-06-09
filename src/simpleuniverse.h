@@ -25,8 +25,8 @@ public:
     ~SimpleUniverse() override;
 
     // Universe interface
-    unsigned int height() override {return 100;}
-    unsigned int width()  override {return 100;}
+    size_t height() override {return 100;}
+    size_t width()  override {return 100;}
     void nextGeneration() override;
     void addCell(const Position &pos) override;
 
