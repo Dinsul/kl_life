@@ -63,14 +63,7 @@ CGL::SimpleUniverse::SimpleUniverse()
         _inhabitants[x] = new int[_height];
     }
 
-
-    for (size_t x = 0; x < _width; ++x)
-    {
-        for (size_t y = 0; y < _height; ++y)
-        {
-            _inhabitants[x][y] = 0;
-        }
-    }
+    clear();
 }
 
 CGL::SimpleUniverse::~SimpleUniverse()
@@ -83,8 +76,24 @@ CGL::SimpleUniverse::~SimpleUniverse()
     delete []  _inhabitants;
 }
 
-size_t CGL::SimpleUniverse::height()   { return _height; }
 size_t CGL::SimpleUniverse::width()    { return _width;  }
+size_t CGL::SimpleUniverse::height()   { return _height; }
+
+void CGL::SimpleUniverse::refresh()
+{
+    checkCells();
+}
+
+void CGL::SimpleUniverse::clear()
+{
+    for (size_t x = 0; x < _width; ++x)
+    {
+        for (size_t y = 0; y < _height; ++y)
+        {
+            _inhabitants[x][y] = 0;
+        }
+    }
+}
 
 void CGL::SimpleUniverse::nextGeneration()
 {
@@ -115,6 +124,8 @@ void CGL::SimpleUniverse::addCell(const CGL::Position &pos)
     quick_trace();
 
     _inhabitants[pos.x][pos.y] = 1;
+
+    checkCells();
 }
 
 void CGL::SimpleUniverse::killCell(const CGL::Position &pos)
@@ -122,6 +133,8 @@ void CGL::SimpleUniverse::killCell(const CGL::Position &pos)
     quick_trace();
 
     _inhabitants[pos.x][pos.y] = 0;
+
+    checkCells();
 }
 
 void CGL::SimpleUniverse::draw(sf::RenderWindow &window)

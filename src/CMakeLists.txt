@@ -11,6 +11,7 @@ add_executable("${PROJECT_NAME}"
     "${PROJECT_SOURCE_DIR}/src/logger.cpp"
     "${PROJECT_SOURCE_DIR}/src/simpleuniverse.cpp"
     "${PROJECT_SOURCE_DIR}/src/universe.cpp"
+    "${PROJECT_SOURCE_DIR}/src/game.cpp"
     )
 
 if (WIN32)

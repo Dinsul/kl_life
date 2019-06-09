@@ -35,14 +35,14 @@ void CGL::Settings::load(const std::string &filename)
     // Отображение
     mainFrameHeight = settingsTree.get<size_t>  ("Graphic.mainFrameHeight", 500);
     mainFrameWidth  = settingsTree.get<size_t>  ("Graphic.mainFrameWidth",  500);
-    drawPeriod      = settingsTree.get<size_t>  ("Graphic.drawPeriod",      42);
     cellSize        = settingsTree.get<size_t>  ("Graphic.cellSize",        10);
+    drawPeriod      = settingsTree.get<int>     ("Graphic.drawPeriod",      42);
     scale           = settingsTree.get<int>     ("Graphic.scale",           1);
 
     // Вселенная
     universeHeight   = settingsTree.get<size_t> ("Universe.height",           500);
     universeWidth    = settingsTree.get<size_t> ("Universe.width",            500);
-    generationPeriod = settingsTree.get<size_t> ("Universe.generationPeriod", 500);
+    generationPeriod = settingsTree.get<int>    ("Universe.generationPeriod", 500);
     cycled           = settingsTree.get<bool>   ("Universe.cycled",           false);
 }
 
@@ -65,8 +65,8 @@ void CGL::Settings::save(const std::string &filename)
     // Отображение
     settingsTree.put("Graphic.mainFrameHeight",   mainFrameHeight  );
     settingsTree.put("Graphic.mainFrameWidth",    mainFrameWidth   );
-    settingsTree.put("Graphic.drawPeriod",        drawPeriod       );
     settingsTree.put("Graphic.cellSize",          cellSize         );
+    settingsTree.put("Graphic.drawPeriod",        drawPeriod       );
     settingsTree.put("Graphic.scale",             scale            );
 
     // Вселенная

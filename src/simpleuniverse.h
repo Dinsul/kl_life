@@ -1,4 +1,4 @@
-#ifndef SIMPLEUNIVERSE_H
+﻿#ifndef SIMPLEUNIVERSE_H
 #define SIMPLEUNIVERSE_H
 
 #include "universe.h"
@@ -30,6 +30,9 @@ public:
     // Universe interface
     size_t width()  override;
     size_t height() override;
+    void refresh() override;
+    void clear() override;
+
     void nextGeneration() override;
     void addCell(const Position &pos) override;
     void killCell(const Position &pos) override;

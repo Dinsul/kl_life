@@ -54,15 +54,15 @@ public:
     // Отображение
     size_t mainFrameHeight;
     size_t mainFrameWidth;
-    size_t drawPeriod;
     size_t cellSize;
+    int    drawPeriod;
     int    scale;
 
 
     // Вселенная
     size_t universeHeight;
     size_t universeWidth;
-    size_t generationPeriod;
+    int    generationPeriod;
     bool   cycled;
 
     static Settings &get();
