@@ -34,6 +34,7 @@ class Settings
     void operator =(Settings&) = delete;
 
 public:
+    // Журналирование
     enum class LogLevel {
         trace    = 0,
         debug    = 1,
@@ -49,6 +50,20 @@ public:
     bool logLast;
 
     std::string logPath;
+
+    // Отображение
+    size_t mainFrameHeight;
+    size_t mainFrameWidth;
+    size_t drawPeriod;
+    size_t cellSize;
+    int    scale;
+
+
+    // Вселенная
+    size_t universeHeight;
+    size_t universeWidth;
+    size_t generationPeriod;
+    bool   cycled;
 
     static Settings &get();
     void load(const std::string &filename);

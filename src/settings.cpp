@@ -25,11 +25,25 @@ void CGL::Settings::load(const std::string &filename)
          std::cerr << "Error: can not load log settings." << std::endl;
     }
 
+    // Журналирование
 //    logLevel    = settingsTree.get<LogLevel> ("LogSettings.logLevel",    LogLevel::info);
     logToFile   = settingsTree.get<bool>        ("LogSettings.logToFile",   true);
     logToStdout = settingsTree.get<bool>        ("LogSettings.logToStdout", false);
     logLast     = settingsTree.get<bool>        ("LogSettings.logLast",     false);
     logPath     = settingsTree.get<std::string> ("LogSettings.logPath",     "log");
+
+    // Отображение
+    mainFrameHeight = settingsTree.get<size_t>  ("Graphic.mainFrameHeight", 500);
+    mainFrameWidth  = settingsTree.get<size_t>  ("Graphic.mainFrameWidth",  500);
+    drawPeriod      = settingsTree.get<size_t>  ("Graphic.drawPeriod",      42);
+    cellSize        = settingsTree.get<size_t>  ("Graphic.cellSize",        10);
+    scale           = settingsTree.get<int>     ("Graphic.scale",           1);
+
+    // Вселенная
+    universeHeight   = settingsTree.get<size_t> ("Universe.height",           500);
+    universeWidth    = settingsTree.get<size_t> ("Universe.width",            500);
+    generationPeriod = settingsTree.get<size_t> ("Universe.generationPeriod", 500);
+    cycled           = settingsTree.get<bool>   ("Universe.cycled",           false);
 }
 
 void CGL::Settings::load()
@@ -41,11 +55,25 @@ void CGL::Settings::save(const std::string &filename)
 {
     boost::property_tree::ptree settingsTree;
 
+    // Журналирование
 //    settingsTree.put("LogSettings.logLevel",    logLevel);
     settingsTree.put("LogSettings.logToFile",   logToFile);
     settingsTree.put("LogSettings.logToStdout", logToStdout);
     settingsTree.put("LogSettings.logLast",     logLast);
     settingsTree.put("LogSettings.logPath",     logPath);
+
+    // Отображение
+    settingsTree.put("Graphic.mainFrameHeight",   mainFrameHeight  );
+    settingsTree.put("Graphic.mainFrameWidth",    mainFrameWidth   );
+    settingsTree.put("Graphic.drawPeriod",        drawPeriod       );
+    settingsTree.put("Graphic.cellSize",          cellSize         );
+    settingsTree.put("Graphic.scale",             scale            );
+
+    // Вселенная
+    settingsTree.put("Universe.height",           universeHeight   );
+    settingsTree.put("Universe.width",            universeWidth    );
+    settingsTree.put("Universe.generationPeriod", generationPeriod );
+    settingsTree.put("Universe.cycled",           cycled           );
 
 
     try {
