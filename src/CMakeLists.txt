@@ -5,12 +5,12 @@ include_directories("${PROJECT_SOURCE_DIR}/src" ${CONAN_INCLUDE_DIRS})
 configure_file("${PROJECT_SOURCE_DIR}/info.h.in" "${PROJECT_SOURCE_DIR}/src/info.h")
 
 add_executable("${PROJECT_NAME}"
+    "${PROJECT_SOURCE_DIR}/src/life_types.hpp"
     "${PROJECT_SOURCE_DIR}/src/main.cpp"
     "${PROJECT_SOURCE_DIR}/src/settings.cpp"
     "${PROJECT_SOURCE_DIR}/src/logger.cpp"
     "${PROJECT_SOURCE_DIR}/src/simpleuniverse.cpp"
-    "${PROJECT_SOURCE_DIR}/src/life_types.hpp"
-    "${PROJECT_SOURCE_DIR}/src/universe.h"
+    "${PROJECT_SOURCE_DIR}/src/universe.cpp"
     )
 
 if (WIN32)

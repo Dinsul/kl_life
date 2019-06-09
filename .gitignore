@@ -3,6 +3,8 @@
 
 debug/
 release/
+Debug/
+Release/
 src/info.h
 CMakeLists.txt.*
 *~

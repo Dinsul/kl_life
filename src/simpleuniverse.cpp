@@ -1,5 +1,8 @@
 #include "simpleuniverse.h"
 #include "logger.h"
+#include "settings.h"
+
+#include "chrono"
 
 #include <SFML/Graphics.hpp>
 
@@ -7,18 +10,23 @@ void CGL::SimpleUniverse::checkCells()
 {
     quick_trace();
 
-    for (int x = 0; x < 100; ++x)
+    _challengerForDie.clear();
+    _challengerForBorn.clear();
+
+    auto &settings = Settings::get();
+
+    for (size_t x = 0; x < settings.universeWidth; ++x)
     {
-        for (int y = 0; y < 100; ++y)
+        for (size_t y = 0; y < settings.universeHeight; ++y)
         {
             if (_inhabitants[x][y])
             {
                 _challengerForDie.add({x, y});
 
-                for (int nx = x - 1; nx <= x + 1; ++nx)
+                for (size_t nx = x - 1; nx <= x + 1; ++nx)
                 {
 
-                    for (int ny = y - 1; ny <= y + 1; ++ny)
+                    for (size_t ny = y - 1; ny <= y + 1; ++ny)
                     {
                         if (ny == y && nx == x)
                         {
@@ -43,12 +51,22 @@ void CGL::SimpleUniverse::checkCells()
 
 
 CGL::SimpleUniverse::SimpleUniverse()
+    : _width(Settings::get().universeWidth),
+      _height(Settings::get().universeHeight)
 {
     quick_trace();
 
-    for (int x = 0; x < 100; ++x)
+    _inhabitants = new int*[_width];
+
+    for (size_t x = 0; x < _width; ++x)
     {
-        for (int y = 0; y < 100; ++y)
+        _inhabitants[x] = new int[_height];
+    }
+
+
+    for (size_t x = 0; x < _width; ++x)
+    {
+        for (size_t y = 0; y < _height; ++y)
         {
             _inhabitants[x][y] = 0;
         }
@@ -56,7 +74,17 @@ CGL::SimpleUniverse::SimpleUniverse()
 }
 
 CGL::SimpleUniverse::~SimpleUniverse()
-{}
+{
+    for (size_t x = 0; x < _width; ++x)
+    {
+        delete [] _inhabitants[x];
+    }
+
+    delete []  _inhabitants;
+}
+
+size_t CGL::SimpleUniverse::height()   { return _height; }
+size_t CGL::SimpleUniverse::width()    { return _width;  }
 
 void CGL::SimpleUniverse::nextGeneration()
 {
@@ -80,8 +108,6 @@ void CGL::SimpleUniverse::nextGeneration()
         }
     }
 
-    _challengerForDie.clear();
-    _challengerForBorn.clear();
 }
 
 void CGL::SimpleUniverse::addCell(const CGL::Position &pos)
@@ -91,25 +117,34 @@ void CGL::SimpleUniverse::addCell(const CGL::Position &pos)
     _inhabitants[pos.x][pos.y] = 1;
 }
 
-void CGL::SimpleUniverse::draw(sf::RenderWindow &window)
+void CGL::SimpleUniverse::killCell(const CGL::Position &pos)
 {
     quick_trace();
 
+    _inhabitants[pos.x][pos.y] = 0;
+}
+
+void CGL::SimpleUniverse::draw(sf::RenderWindow &window)
+{
+    quick_trace();
+    auto begin = std::chrono::steady_clock::now();
+
     sf::RectangleShape rect;
+    auto cellSize = Settings::get().cellSize;
 
     rect.setFillColor(sf::Color{200, 100, 0});
     rect.setSize(sf::Vector2f{10,10});
 
-    for (int x = 0; x < 100; ++x)
+    for (auto & cell : _challengerForDie)
     {
-        for (int y = 0; y < 100; ++y)
-        {
-            if (_inhabitants[x][y])
-            {
-                rect.setPosition(x * 10, y * 10);
+        rect.setPosition(cell.first.x * cellSize, cell.first.y * cellSize);
 
-                window.draw(rect);
-            }
-        }
+        window.draw(rect);
     }
+
+    auto end = std::chrono::steady_clock::now();
+
+    auto elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+
+    Logger::debug(makeStr("Time of draw", elapsed_us.count(), "µs"));
 }

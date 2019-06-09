@@ -14,7 +14,10 @@ namespace CGL {
 
 class SimpleUniverse : public Universe
 {
-    int _inhabitants[100][100];
+    size_t _width;
+    size_t _height;
+
+    int **_inhabitants;
     uniqList<Position> _challengerForBorn;
     uniqList<Position> _challengerForDie;
 
@@ -25,13 +28,15 @@ public:
     ~SimpleUniverse() override;
 
     // Universe interface
-    size_t height() override {return 100;}
-    size_t width()  override {return 100;}
+    size_t width()  override;
+    size_t height() override;
     void nextGeneration() override;
     void addCell(const Position &pos) override;
+    void killCell(const Position &pos) override;
 
 
     void draw(sf::RenderWindow &window) override;
+
 };
 
 } // CGL
