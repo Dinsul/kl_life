@@ -8,9 +8,10 @@
 namespace sf {
 class RenderWindow;
 class Clock;
+class View;
 }
 
-namespace CGL {
+namespace cgl {
 class Universe;
 class Settings;
 }
@@ -22,12 +23,19 @@ private:
     bool _isPause;
 
     sf::RenderWindow &_window;
-    CGL::Universe    &_universe;
-    CGL::Settings    &_settings;
+    cgl::Universe    &_universe;
+    cgl::Settings    &_settings;
+
+    bool _holdToDraw;
+    bool _holdToErase;
+    bool _holdToMove;
 
     std::unique_ptr<sf::Clock> _updateTimer;
     std::unique_ptr<sf::Clock> _drawTimer;
     std::unique_ptr<sf::Clock> _gameTime;
+    std::unique_ptr<sf::View>  _viewMain;
+    std::unique_ptr<sf::View>  _viewMenu;
+
 
     void _doDraw(void);
 
@@ -35,13 +43,10 @@ private:
     void _drawStatus();
 
     void _getPlayersControl();
-
-
-    bool _holdToDraw;
-    bool _holdToErase;
+    void _viewSetup();
 
 public:
-    Game(sf::RenderWindow &window, CGL::Universe &universe);
+    Game(sf::RenderWindow &window, cgl::Universe &universe);
     ~Game();
 
     void run();

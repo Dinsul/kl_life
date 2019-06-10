@@ -9,12 +9,12 @@
 
 #include <map>
 
-namespace CGL {
+namespace cgl {
 
 struct Position
 {
-    size_t x;
-    size_t y;
+    int x;
+    int y;
 
     bool operator <(const Position &other) const
     {

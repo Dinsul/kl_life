@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace CGL {
+namespace cgl {
 //!
 //! \brief The Settings class
 //! Это класс который содержит все необходимые параметры игры.
@@ -52,18 +52,20 @@ public:
     std::string logPath;
 
     // Отображение
-    size_t mainFrameHeight;
-    size_t mainFrameWidth;
-    size_t cellSize;
-    int    drawPeriod;
-    int    scale;
-
+    int  mainFrameHeight;
+    int  mainFrameWidth;
+    int  cellSize;
+    int  drawPeriod;
+    int  scale;
+    uint32_t inhabitantColor;
+    uint32_t backGroundColor;
+    uint32_t gridColor;
 
     // Вселенная
-    size_t universeHeight;
-    size_t universeWidth;
-    int    generationPeriod;
-    bool   cycled;
+    int  universeHeight;
+    int  universeWidth;
+    int  generationPeriod;
+    bool cycled;
 
     static Settings &get();
     void load(const std::string &filename);

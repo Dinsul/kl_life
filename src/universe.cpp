@@ -1,14 +1,18 @@
 #include "universe.h"
-#include "life_types.hpp"
 
-CGL::Universe::~Universe(){}
+const cgl::uniqList<cgl::Position> &cgl::Universe::inhabitants() const
+{
+    return _inhabitants;
+}
 
-void CGL::Universe::addCell(size_t x, size_t y)
+cgl::Universe::~Universe(){}
+
+void cgl::Universe::addCell(int x, int y)
 {
     addCell(Position{x, y});
 }
 
-void CGL::Universe::killCell(size_t x, size_t y)
+void cgl::Universe::killCell(int x, int y)
 {
     killCell(Position{x, y});
 }

@@ -10,16 +10,15 @@ namespace sf {
 class RenderWindow;
 }
 
-namespace CGL {
+namespace cgl {
 
 class SimpleUniverse : public Universe
 {
-    size_t _width;
-    size_t _height;
+    int _width;
+    int _height;
 
-    int **_inhabitants;
+    int **_map;
     uniqList<Position> _challengerForBorn;
-    uniqList<Position> _challengerForDie;
 
     void checkCells();
 
@@ -28,18 +27,14 @@ public:
     ~SimpleUniverse() override;
 
     // Universe interface
-    size_t width()  override;
-    size_t height() override;
+    int  width()  override;
+    int  height() override;
     void refresh() override;
     void clear() override;
 
     void nextGeneration() override;
     void addCell(const Position &pos) override;
     void killCell(const Position &pos) override;
-
-
-    void draw(sf::RenderWindow &window) override;
-
 };
 
 } // CGL

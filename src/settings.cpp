@@ -7,12 +7,12 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
-CGL::Settings::Settings()
+cgl::Settings::Settings()
 {
     load();
 }
 
-void CGL::Settings::load(const std::string &filename)
+void cgl::Settings::load(const std::string &filename)
 {
     boost::property_tree::ptree settingsTree;
 
@@ -27,40 +27,43 @@ void CGL::Settings::load(const std::string &filename)
 
     // Журналирование
 //    logLevel    = settingsTree.get<LogLevel> ("LogSettings.logLevel",    LogLevel::info);
-    logToFile   = settingsTree.get<bool>        ("LogSettings.logToFile",   true);
-    logToStdout = settingsTree.get<bool>        ("LogSettings.logToStdout", false);
-    logLast     = settingsTree.get<bool>        ("LogSettings.logLast",     false);
-    logPath     = settingsTree.get<std::string> ("LogSettings.logPath",     "log");
+    logToFile   = settingsTree.get<bool>          ("LogSettings.logToFile",     true);
+    logToStdout = settingsTree.get<bool>          ("LogSettings.logToStdout",   false);
+    logLast     = settingsTree.get<bool>          ("LogSettings.logLast",       false);
+    logPath     = settingsTree.get<std::string>   ("LogSettings.logPath",       "log");
 
     // Отображение
-    mainFrameHeight = settingsTree.get<size_t>  ("Graphic.mainFrameHeight", 500);
-    mainFrameWidth  = settingsTree.get<size_t>  ("Graphic.mainFrameWidth",  500);
-    cellSize        = settingsTree.get<size_t>  ("Graphic.cellSize",        10);
-    drawPeriod      = settingsTree.get<int>     ("Graphic.drawPeriod",      42);
-    scale           = settingsTree.get<int>     ("Graphic.scale",           1);
+    mainFrameHeight  = settingsTree.get<int>      ("Graphic.mainFrameHeight",   500);
+    mainFrameWidth   = settingsTree.get<int>      ("Graphic.mainFrameWidth",    500);
+    cellSize         = settingsTree.get<int>      ("Graphic.cellSize",          10);
+    drawPeriod       = settingsTree.get<int>      ("Graphic.drawPeriod",        42);
+    scale            = settingsTree.get<int>      ("Graphic.scale",             1);
+    inhabitantColor  = settingsTree.get<uint32_t> ("Universe.inhabitantColor",  0xFF0000FF);
+    backGroundColor  = settingsTree.get<uint32_t> ("Universe.backGroundColor",  0xFFFFFFFF);
+    gridColor        = settingsTree.get<uint32_t> ("Universe.gridColor",        0x0000FFFF);
 
     // Вселенная
-    universeHeight   = settingsTree.get<size_t> ("Universe.height",           500);
-    universeWidth    = settingsTree.get<size_t> ("Universe.width",            500);
-    generationPeriod = settingsTree.get<int>    ("Universe.generationPeriod", 500);
-    cycled           = settingsTree.get<bool>   ("Universe.cycled",           false);
+    universeHeight   = settingsTree.get<int>      ("Universe.height",           500);
+    universeWidth    = settingsTree.get<int>      ("Universe.width",            500);
+    generationPeriod = settingsTree.get<int>      ("Universe.generationPeriod", 500);
+    cycled           = settingsTree.get<bool>     ("Universe.cycled",           false);
 }
 
-void CGL::Settings::load()
+void cgl::Settings::load()
 {
     load(PRJ_NAME".ini");
 }
 
-void CGL::Settings::save(const std::string &filename)
+void cgl::Settings::save(const std::string &filename)
 {
     boost::property_tree::ptree settingsTree;
 
     // Журналирование
-//    settingsTree.put("LogSettings.logLevel",    logLevel);
-    settingsTree.put("LogSettings.logToFile",   logToFile);
-    settingsTree.put("LogSettings.logToStdout", logToStdout);
-    settingsTree.put("LogSettings.logLast",     logLast);
-    settingsTree.put("LogSettings.logPath",     logPath);
+//    settingsTree.put("LogSettings.logLevel",      logLevel);
+    settingsTree.put("LogSettings.logToFile",     logToFile        );
+    settingsTree.put("LogSettings.logToStdout",   logToStdout      );
+    settingsTree.put("LogSettings.logLast",       logLast          );
+    settingsTree.put("LogSettings.logPath",       logPath          );
 
     // Отображение
     settingsTree.put("Graphic.mainFrameHeight",   mainFrameHeight  );
@@ -68,6 +71,9 @@ void CGL::Settings::save(const std::string &filename)
     settingsTree.put("Graphic.cellSize",          cellSize         );
     settingsTree.put("Graphic.drawPeriod",        drawPeriod       );
     settingsTree.put("Graphic.scale",             scale            );
+    settingsTree.put("Universe.inhabitantColor",  inhabitantColor  );
+    settingsTree.put("Universe.backGroundColor",  backGroundColor  );
+    settingsTree.put("Universe.gridColor",        gridColor        );
 
     // Вселенная
     settingsTree.put("Universe.height",           universeHeight   );
@@ -85,12 +91,12 @@ void CGL::Settings::save(const std::string &filename)
     }
 }
 
-void CGL::Settings::save()
+void cgl::Settings::save()
 {
     save(PRJ_NAME".ini");
 }
 
-CGL::Settings &CGL::Settings::get()
+cgl::Settings &cgl::Settings::get()
 {
     static Settings settings;
 

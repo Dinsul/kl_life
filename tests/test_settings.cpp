@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(test_save_load)
 
     // Здесь файл поумолчанью существовать не должен
     // Будет соответствующее сообщение
-    auto &ls = CGL::Settings::get();
+    auto &ls = cgl::Settings::get();
 
     std::cout << ls.logPath << std::endl;
     // Проверяем значение поумолчанию

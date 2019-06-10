@@ -8,7 +8,7 @@
 #include "info.h"
 #include "settings.h"
 
-std::shared_ptr<spdlog::logger> &CGL::Logger::file_log()
+std::shared_ptr<spdlog::logger> &cgl::Logger::file_log()
 {
     static std::shared_ptr<spdlog::logger> _fileLogger;
     if (!_fileLogger)
@@ -37,7 +37,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::file_log()
     return _fileLogger;
 }
 
-std::shared_ptr<spdlog::logger> &CGL::Logger::last_log()
+std::shared_ptr<spdlog::logger> &cgl::Logger::last_log()
 {
     static std::shared_ptr<spdlog::logger> _lastLogger;
     if (!_lastLogger)
@@ -66,7 +66,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::last_log()
     return _lastLogger;
 }
 
-std::shared_ptr<spdlog::logger> &CGL::Logger::stdout_log()
+std::shared_ptr<spdlog::logger> &cgl::Logger::stdout_log()
 {
     static std::shared_ptr<spdlog::logger> _constd;
 
@@ -81,7 +81,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::stdout_log()
     return _constd;
 }
 
-std::shared_ptr<spdlog::logger> &CGL::Logger::stderr_log()
+std::shared_ptr<spdlog::logger> &cgl::Logger::stderr_log()
 {
     static std::shared_ptr<spdlog::logger> _conerr;
 
@@ -96,7 +96,7 @@ std::shared_ptr<spdlog::logger> &CGL::Logger::stderr_log()
     return _conerr;
 }
 
-void CGL::Logger::trace(const std::string &msg)
+void cgl::Logger::trace(const std::string &msg)
 {
     if (Settings::get().logToFile) {
         file_log()->trace(msg);
@@ -113,7 +113,7 @@ void CGL::Logger::trace(const std::string &msg)
     }
 }
 
-void CGL::Logger::debug(const std::string &msg)
+void cgl::Logger::debug(const std::string &msg)
 {
     if (Settings::get().logToFile) {
         file_log()->debug(msg);
@@ -130,7 +130,7 @@ void CGL::Logger::debug(const std::string &msg)
     }
 }
 
-void CGL::Logger::info(const std::string &msg)
+void cgl::Logger::info(const std::string &msg)
 {
     if (Settings::get().logToFile) {
         file_log()->info(msg);
@@ -147,7 +147,7 @@ void CGL::Logger::info(const std::string &msg)
     }
 }
 
-void CGL::Logger::warning(const std::string &msg)
+void cgl::Logger::warning(const std::string &msg)
 {
     if (Settings::get().logToFile) {
         file_log()->warn(msg);
@@ -164,7 +164,7 @@ void CGL::Logger::warning(const std::string &msg)
     }
 }
 
-void CGL::Logger::error(const std::string &msg)
+void cgl::Logger::error(const std::string &msg)
 {
     if (Settings::get().logToFile) {
         file_log()->error(msg);

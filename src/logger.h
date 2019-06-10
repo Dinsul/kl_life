@@ -4,14 +4,14 @@
 #include <memory>
 #include <sstream>
 
-#define quick_mtrace(m) CGL::Logger::trace(CGL::cat("[", __FILE__, ":", __LINE__, " ", __FUNCTION__, "] ", m))
-#define quick_trace()   CGL::Logger::trace(CGL::cat("[", __FILE__, ":", __LINE__, " ", __FUNCTION__, "]"))
+#define quick_mtrace(m) cgl::Logger::trace(cgl::cat("[", __FILE__, ":", __LINE__, " ", __FUNCTION__, "] ", m))
+#define quick_trace()   cgl::Logger::trace(cgl::cat("[", __FILE__, ":", __LINE__, " ", __FUNCTION__, "]"))
 
 namespace spdlog{
 class logger;
 }
 
-namespace CGL {
+namespace cgl {
 
 //!
 //! \brief The Logger class
@@ -26,7 +26,7 @@ namespace CGL {
 //!
 //! При чём _стандартный поток вывода_ или _стандартный поток вывода_
 //! выбирается в зависимости от типа сообщения и при влючённой настройке
-//! \link CGL::LogSettings::logToStdout \link
+//! \link cgl::LogSettings::logToStdout \link
 //!
 class Logger
 {
