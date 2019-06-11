@@ -26,9 +26,12 @@ private:
     cgl::Universe    &_universe;
     cgl::Settings    &_settings;
 
-    bool _holdToDraw;
-    bool _holdToErase;
-    bool _holdToMove;
+    enum class MouseState {
+        normal,
+        pushCell,
+        popCell,
+        moveMap
+    }_mouseState;
 
     std::unique_ptr<sf::Clock> _updateTimer;
     std::unique_ptr<sf::Clock> _drawTimer;

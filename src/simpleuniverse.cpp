@@ -15,9 +15,9 @@ void cgl::SimpleUniverse::checkCells()
 
     auto &settings = Settings::get();
 
-    for (int x = 0; x < settings.universeWidth; ++x)
+    for (int x = 0; x < _width; ++x)
     {
-        for (int y = 0; y < settings.universeHeight; ++y)
+        for (int y = 0; y < _height; ++y)
         {
             if (_map[x][y])
             {
@@ -33,14 +33,36 @@ void cgl::SimpleUniverse::checkCells()
                             continue;
                         }
 
-                        if (_map[nx][ny])
-                        {
+                        int loopX = nx;
+                        int loopY = ny;
 
+                        if (ny >= _height || nx >= _width || ny < 0 || nx < 0)
+                        {
+                            if (!settings.cycled)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                if (nx < 0)
+                                    loopX = _width - 1;
+                                if (ny < 0)
+                                    loopY = _height - 1;
+                                if (nx >= _width)
+                                    loopX = 0;
+                                if (ny >= _height)
+                                    loopY = 0;
+
+                            }
+                        }
+
+                        if (_map[loopX][loopY])
+                        {
                             _inhabitants.add({x, y});
                         }
                         else
                         {
-                            _challengerForBorn.add({nx, ny});
+                            _challengerForBorn.add({loopX, loopY});
                         }
                     }
                 }
@@ -125,7 +147,7 @@ void cgl::SimpleUniverse::addCell(const cgl::Position &pos)
 
     _map[pos.x][pos.y] = 1;
 
-    checkCells();
+    _inhabitants.add(pos);
 }
 
 void cgl::SimpleUniverse::killCell(const cgl::Position &pos)
@@ -134,5 +156,5 @@ void cgl::SimpleUniverse::killCell(const cgl::Position &pos)
 
     _map[pos.x][pos.y] = 0;
 
-    checkCells();
+    _inhabitants.erase(pos);
 }

@@ -33,7 +33,7 @@ template <class T>
 class uniqList : public std::map<T, size_t>
 {
 public:
-    size_t add(T&& value)
+    size_t add(const T& value)
     {
         return  ++(*this)[value];
     }

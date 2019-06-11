@@ -15,9 +15,7 @@ Game::Game(sf::RenderWindow &window, cgl::Universe &universe)
       _window(window),
       _universe(universe),
       _settings(cgl::Settings::get()),
-      _holdToDraw(false),
-      _holdToErase(false),
-      _holdToMove(false)
+      _mouseState(MouseState::normal)
 {
     _updateTimer    = std::make_unique<sf::Clock>();
     _drawTimer      = std::make_unique<sf::Clock>();
@@ -141,12 +139,12 @@ void Game::_drawMainScreen()
 
 void Game::_drawStatus()
 {
-//    sf::RectangleShape backGround;
+    //    sf::RectangleShape backGround;
 
-//    backGround.setFillColor(sf::Color{_settings.backGroundColor});
-//    backGround.setSize(sf::Vector2f{300, 300});
-//    backGround.setPosition(0,0);
-//    _window.draw(backGround);
+    //    backGround.setFillColor(sf::Color{_settings.backGroundColor});
+    //    backGround.setSize(sf::Vector2f{300, 300});
+    //    backGround.setPosition(0,0);
+    //    _window.draw(backGround);
 
     sf::Text *text = new sf::Text();
     sf::Font *font = new sf::Font();
@@ -176,16 +174,16 @@ void Game::_drawStatus()
     text->setPosition(10, linePos);
     text->setFillColor(sf::Color{0xCFCFCFFF});
     text->setString(L"MouseLeft - оживить ячейку\n"
-                     "MouseRight - убить ячейку\n"
-                     "MouseMiddle - тащить поле мышкой\n\n"
-                     "W\t- переместить поле вверх\n"
-                     "A\t- переместить поле налево\n"
-                     "S\t- переместить поле вниз\n"
-                     "D\t- переместить поле направо\n"
-                     "Space\t- запустить/остановить\n"
-                     "Escape\t- выйти\n"
-                     "Delete или\n"
-                     "BackSpace\t- очистить\n");
+                    "MouseRight - убить ячейку\n"
+                    "MouseMiddle - тащить поле мышкой\n\n"
+                    "W\t- переместить поле вверх\n"
+                    "A\t- переместить поле налево\n"
+                    "S\t- переместить поле вниз\n"
+                    "D\t- переместить поле направо\n"
+                    "Space\t- запустить/остановить\n"
+                    "Escape\t- выйти\n"
+                    "Delete или\n"
+                    "BackSpace\t- очистить\n");
 
     _window.draw(*text);
 
@@ -209,11 +207,6 @@ void Game::_getPlayersControl()
         if (event.type == sf::Event::Closed)
         {
             stop();
-        }
-
-        if (event.type == sf::Event::MouseWheelScrolled)
-        {
-            cgl::Settings::get().cellSize += event.mouseWheel.delta;
         }
 
         if (event.type == sf::Event::KeyPressed)
@@ -251,6 +244,32 @@ void Game::_getPlayersControl()
                 _viewMain->move(-5.f, 0);
                 break;
 
+            case sf::Keyboard::Key::Subtract:
+            {
+                auto center = _viewMain->getCenter();
+                auto delta  = 2.f / static_cast<float>(_settings.cellSize) + 1.f;
+
+                _settings.cellSize -= 2;
+
+                center.x /= delta;
+                center.y /= delta;
+                _viewMain->setCenter(center);
+            }
+                break;
+
+            case sf::Keyboard::Key::Add:
+            {
+                auto center = _viewMain->getCenter();
+                auto delta  = 2.f / static_cast<float>(_settings.cellSize) + 1.f;
+
+                _settings.cellSize += 2;
+
+                center.x *= delta;
+                center.y *= delta;
+                _viewMain->setCenter(center);
+            }
+                break;
+
             default:
                 break;
             }
@@ -258,46 +277,52 @@ void Game::_getPlayersControl()
 
         if (event.type == sf::Event::MouseButtonPressed)
         {
+            switch (event.mouseButton.button)
+            {
+            case sf::Mouse::Button::Left:
+                _mouseState = MouseState::pushCell;
+                break;
 
-            if      (event.mouseButton.button == sf::Mouse::Button::Left)
-            {
-                _holdToDraw = true;
-            }
-            else if (event.mouseButton.button == sf::Mouse::Button::Right)
-            {
-                _holdToErase = true;
-            }
-            else if (event.mouseButton.button == sf::Mouse::Button::Middle)
-            {
-                _holdToMove = true;
+            case sf::Mouse::Button::Middle:
+                _mouseState = MouseState::moveMap;
+                break;
+
+            case sf::Mouse::Button::Right:
+                _mouseState = MouseState::popCell;
+                break;
+
+            default:
+                break;
             }
         }
 
         if (event.type == sf::Event::MouseButtonReleased)
         {
-            _holdToDraw  = false;
-            _holdToErase = false;
-            _holdToMove  = false;
+            _mouseState = MouseState::normal;
 
-            auto x = static_cast<int>(_viewMain->getCenter().x + event.mouseButton.x
-                                      - _window.getSize().x / 2) / _settings.cellSize;
-
-            auto y = static_cast<int>(_viewMain->getCenter().y + event.mouseButton.y
-                                      - _window.getSize().y / 2) / _settings.cellSize;
-
-            if      (event.mouseButton.button == sf::Mouse::Button::Left &&
-                     x > 0 && y > 0 &&
-                     x < _universe.width() * _settings.cellSize &&
-                     y < _universe.height() * _settings.cellSize )
+            if (event.mouseButton.x < _viewMain->getSize().x)
             {
-                _universe.addCell(x, y);
-            }
-            else if (event.mouseButton.button == sf::Mouse::Button::Right
-                     && x > 0 && y > 0 &&
-                     x < _universe.width() * _settings.cellSize &&
-                     y < _universe.height() * _settings.cellSize)
-            {
-                _universe.killCell(x, y);
+                auto x = static_cast<int>((_viewMain->getCenter().x + event.mouseButton.x
+                                           - _window.getSize().x / 2) + _viewMenu->getSize().x / 2) / _settings.cellSize;
+
+                auto y = static_cast<int>(_viewMain->getCenter().y + event.mouseButton.y
+                                          - _window.getSize().y / 2) / _settings.cellSize;
+
+                if ( x > 0 && y > 0 && x < _universe.width() && y < _universe.height())
+                {
+                    switch (event.mouseButton.button)
+                    {
+                    case sf::Mouse::Button::Left:
+                        _universe.addCell(x, y);
+                        break;
+
+                    case sf::Mouse::Button::Right:
+                        _universe.killCell(x, y);
+                        break;
+                    default:
+                        break;
+                    }
+                }
             }
         }
 
@@ -306,27 +331,35 @@ void Game::_getPlayersControl()
             static float oldX;
             static float oldY;
 
-            auto x = static_cast<int>(_viewMain->getCenter().x + event.mouseMove.x
-                                      - _window.getSize().x / 2) / _settings.cellSize;
+            if (_mouseState != MouseState::normal)
+            {
+                auto x = static_cast<int>((_viewMain->getCenter().x + event.mouseMove.x
+                                           - _window.getSize().x / 2) + _viewMenu->getSize().x / 2) / _settings.cellSize;
 
-            auto y = static_cast<int>(_viewMain->getCenter().y + event.mouseMove.y
-                                      - _window.getSize().y / 2) / _settings.cellSize;
+                auto y = static_cast<int>(_viewMain->getCenter().y + event.mouseMove.y
+                                          - _window.getSize().y / 2) / _settings.cellSize;
 
-            if      (_holdToDraw && x > 0 && y > 0 &&
-                     x < _universe.width() * _settings.cellSize &&
-                     y < _universe.height() * _settings.cellSize )
-            {
-                _universe.addCell(x, y);
-            }
-            else if (_holdToErase && x > 0 && y > 0 &&
-                     x < _universe.width() * _settings.cellSize &&
-                     y < _universe.height() * _settings.cellSize)
-            {
-                _universe.killCell(x, y);
-            }
-            else if (_holdToMove)
-            {
-                _viewMain->move(oldX - event.mouseMove.x, oldY - event.mouseMove.y);
+                if (event.mouseMove.x < _viewMain->getSize().x &&
+                        x > 0 && y > 0 && x < _universe.width() && y < _universe.height())
+                {
+                    switch (_mouseState)
+                    {
+                    case MouseState::pushCell:
+                        _universe.addCell(x, y);
+                        break;
+
+                    case MouseState::popCell:
+                        _universe.killCell(x, y);
+                        break;
+
+                    case MouseState::moveMap:
+                        _viewMain->move(oldX - event.mouseMove.x, oldY - event.mouseMove.y);
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
             }
 
             oldX = event.mouseMove.x;
