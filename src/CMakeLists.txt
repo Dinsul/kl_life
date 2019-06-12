@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-include_directories("${PROJECT_SOURCE_DIR}/src" ${CONAN_INCLUDE_DIRS})
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 configure_file("${PROJECT_SOURCE_DIR}/info.h.in" "${PROJECT_SOURCE_DIR}/src/info.h")
 
@@ -14,6 +15,29 @@ add_executable("${PROJECT_NAME}"
     "${PROJECT_SOURCE_DIR}/src/game.cpp"
     )
 
+#find_package(spdlog)
+find_package(Boost REQUIRED COMPONENTS filesystem)
+
+if(Boost_FOUND)
+    target_include_directories("${PROJECT_NAME}" PUBLIC ${Boost_INCLUDE_DIR})
+    target_link_libraries("${PROJECT_NAME}" "${Boost_LIBRARIES}")
+else()
+    message("Boost not found!!!")
+endif()
+
+find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+
+if(SFML_FOUND)
+    target_include_directories("${PROJECT_NAME}" PUBLIC ${SFML_INCLUDE_DIR})
+    target_link_libraries("${PROJECT_NAME}" "sfml-system" "sfml-graphics" "sfml-window" "-lpthread")
+else()
+    set(SFML_ROOT "" CACHE PATH "SFML top-level directory")
+    message("\n-> SFML directory not found. Set SFML_ROOT to SFML's top-level path (containing \"include\" and \"lib\" directories).")
+    message("-> Make sure the SFML libraries with the same configuration (Release/Debug, Static/Dynamic) exist.\n")
+endif()
+
+include_directories("${PROJECT_SOURCE_DIR}/src" "${Boost_INCLUDE_DIRS}")
+
 if (WIN32)
     configure_file("${PROJECT_SOURCE_DIR}/resources.rc.in" "${PROJECT_SOURCE_DIR}/src/resources.rc")
 
@@ -25,10 +49,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" ST
         COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
         )
 endif()
-
-target_link_libraries(${PROJECT_NAME}
-    "${CONAN_LIBS}" "sfml-graphics" "sfml-window"
-    )
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 

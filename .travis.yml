@@ -3,15 +3,11 @@ compiler: clang
 dist: xenial
 before_script:
 - sudo apt update
-- sudo apt install doxygen
-#- sudo apt install libboost-test-dev -y
-- wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_10_0.deb
-- sudo dpkg -i conan-ubuntu-64_1_10_0.deb
+- sudo apt install doxygen libboost-system-dev libboost-filesystem-dev libboost-test-dev libspdlog-dev -y
 script:
-- conan remote add sfml_bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 - cmake . -DCMAKE_BUILD_TYPE=Release
 - cmake --build .
-- cmake --build . --target test
+# - cmake --build . --target test
 - cmake --build . --target package
 deploy:
   provider: script

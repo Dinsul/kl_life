@@ -14,58 +14,48 @@ endif ()
 
 set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_TWEAK})
 
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-                   "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
 
-include("${CMAKE_BINARY_DIR}/conan.cmake")
+#find_package(REQUIRES
+#    boost/1.69.0@conan/stable
+#    spdlog/1.2.1@bincrafters/stable
+#    sfml/2.5.0@bincrafters/stable
 
-message(STATUS "Run 'conan install ...'")
+#    OPTIONS
+#    boost:shared=False
+#    boost:without_wave=True
+#    boost:without_container=True
+#    boost:without_contract=True
+#    boost:without_exception=True
+#    boost:without_graph=True
+#    boost:without_iostreams=True
+#    boost:without_locale=True
+#    boost:without_log=True
+#    boost:without_program_options=True
+#    boost:without_random=True
+#    boost:without_regex=True
+#    boost:without_mpi=True
+#    boost:without_serialization=True
+#    boost:without_coroutine=True
+#    boost:without_fiber=True
+#    boost:without_context=True
+#    boost:without_thread=True
+#    boost:without_date_time=True
+#    boost:without_atomic=True
+#    boost:without_graph_parallel=True
+#    boost:without_python=True
+#    boost:without_stacktrace=True
+#    boost:without_type_erasure=True
+#    boost:without_chrono=True
+#    boost:without_timer=True
+#    boost:without_math=True
 
-conan_cmake_run(REQUIRES
-    boost/1.69.0@conan/stable
-    spdlog/1.2.1@bincrafters/stable
-    sfml/2.5.0@bincrafters/stable
+#    sfml:window=True
+#    sfml:graphics=True
+#    sfml:audio=False
+#    sfml:network=False
 
-    OPTIONS
-    boost:shared=False
-    boost:without_wave=True
-    boost:without_container=True
-    boost:without_contract=True
-    boost:without_exception=True
-    boost:without_graph=True
-    boost:without_iostreams=True
-    boost:without_locale=True
-    boost:without_log=True
-    boost:without_program_options=True
-    boost:without_random=True
-    boost:without_regex=True
-    boost:without_mpi=True
-    boost:without_serialization=True
-    boost:without_coroutine=True
-    boost:without_fiber=True
-    boost:without_context=True
-    boost:without_thread=True
-    boost:without_date_time=True
-    boost:without_atomic=True
-    boost:without_graph_parallel=True
-    boost:without_python=True
-    boost:without_stacktrace=True
-    boost:without_type_erasure=True
-    boost:without_chrono=True
-    boost:without_timer=True
-    boost:without_math=True
-
-    sfml:audio=False
-    sfml:network=False
-
-    BASIC_SETUP CMAKE_TARGETS
-    BUILD missing)
-
-include(${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+#    BASIC_SETUP CMAKE_TARGETS
+#    BUILD missing)
 
 cmake_policy(PUSH)
 cmake_policy(SET CMP0057 NEW)
@@ -102,10 +92,10 @@ add_custom_target("sundries"
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory("src")
-add_subdirectory("tests")
+#add_subdirectory("tests")
 
-enable_testing()
+#enable_testing()
 
-add_test(test_all "${CMAKE_BINARY_DIR}/bin/test_run" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_settings" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+#add_test(test_all "${CMAKE_BINARY_DIR}/bin/test_run" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+#add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_settings" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+#add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

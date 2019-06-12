@@ -1,5 +1,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include <thread>
 #include <chrono>
