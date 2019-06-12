@@ -17,6 +17,18 @@ target_link_libraries("test_settings"
     "boost_filesystem"
     )
 
+add_executable("test_simpleuniverse"
+    "test_simpleuniverse.cpp"
+    "../src/simpleuniverse.cpp"
+    "../src/universe.cpp"
+    "../src/settings.cpp"
+    "../src/logger.cpp"
+    )
+
+target_link_libraries("test_simpleuniverse"
+    "${CONAN_LIBS}"
+    )
+
 target_link_libraries("test_run" "boost_unit_test_framework")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
