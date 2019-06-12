@@ -3,7 +3,7 @@ compiler: clang
 dist: xenial
 before_script:
 - sudo apt update
-- sudo apt install doxygen libboost-system-dev libboost-filesystem-dev libboost-test-dev libspdlog-dev -y
+- sudo apt install doxygen libsfml-dev libboost-system-dev libboost-filesystem-dev libboost-test-dev libspdlog-dev -y
 script:
 - cmake . -DCMAKE_BUILD_TYPE=Release
 - cmake --build .
