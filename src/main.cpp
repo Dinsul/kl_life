@@ -23,7 +23,7 @@ int main(/*int argc, char* argv[]*/)
 
     sf::RenderWindow mainWindow(sf::VideoMode(1000, 600), PRJ_NAME);
 
-    cgl::SimpleUniverse univ;
+    cgl::SimpleUniverse univ(settings.cycled, settings.universeWidth, settings.universeHeight);
 
     Game game(mainWindow, univ);
 

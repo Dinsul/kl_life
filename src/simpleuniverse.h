@@ -14,21 +14,15 @@ namespace cgl {
 
 class SimpleUniverse : public Universe
 {
-    int _width;
-    int _height;
-
+    bool _cycled;
     int **_map;
     uniqList<Position> _challengerForBorn;
 
-    void checkCells();
-
 public:
-    SimpleUniverse();
+    SimpleUniverse(bool cycled = true, int width = 50, int height = 50);
     ~SimpleUniverse() override;
 
     // Universe interface
-    int  width()  override;
-    int  height() override;
     void refresh() override;
     void clear() override;
 

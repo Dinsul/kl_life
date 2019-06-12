@@ -33,19 +33,17 @@ void cgl::Settings::load(const std::string &filename)
     logPath     = settingsTree.get<std::string>   ("LogSettings.logPath",       "log");
 
     // Отображение
-    mainFrameHeight  = settingsTree.get<int>      ("Graphic.mainFrameHeight",   500);
-    mainFrameWidth   = settingsTree.get<int>      ("Graphic.mainFrameWidth",    500);
     cellSize         = settingsTree.get<int>      ("Graphic.cellSize",          10);
     drawPeriod       = settingsTree.get<int>      ("Graphic.drawPeriod",        42);
-    scale            = settingsTree.get<int>      ("Graphic.scale",             1);
     inhabitantColor  = settingsTree.get<uint32_t> ("Universe.inhabitantColor",  0xFF0000FF);
     backGroundColor  = settingsTree.get<uint32_t> ("Universe.backGroundColor",  0xFFFFFFFF);
     gridColor        = settingsTree.get<uint32_t> ("Universe.gridColor",        0x0000FFFF);
 
     // Вселенная
-    universeHeight   = settingsTree.get<int>      ("Universe.height",           500);
-    universeWidth    = settingsTree.get<int>      ("Universe.width",            500);
-    generationPeriod = settingsTree.get<int>      ("Universe.generationPeriod", 500);
+    universeHeight   = settingsTree.get<int>      ("Universe.height",           200);
+    universeWidth    = settingsTree.get<int>      ("Universe.width",            200);
+    generationPeriod = settingsTree.get<int>      ("Universe.generationPeriod", 100);
+    historyDeep      = settingsTree.get<unsigned int> ("Graphic.historyDeep",   5);
     cycled           = settingsTree.get<bool>     ("Universe.cycled",           false);
 }
 
@@ -66,11 +64,8 @@ void cgl::Settings::save(const std::string &filename)
     settingsTree.put("LogSettings.logPath",       logPath          );
 
     // Отображение
-    settingsTree.put("Graphic.mainFrameHeight",   mainFrameHeight  );
-    settingsTree.put("Graphic.mainFrameWidth",    mainFrameWidth   );
     settingsTree.put("Graphic.cellSize",          cellSize         );
     settingsTree.put("Graphic.drawPeriod",        drawPeriod       );
-    settingsTree.put("Graphic.scale",             scale            );
     settingsTree.put("Universe.inhabitantColor",  inhabitantColor  );
     settingsTree.put("Universe.backGroundColor",  backGroundColor  );
     settingsTree.put("Universe.gridColor",        gridColor        );
@@ -79,6 +74,7 @@ void cgl::Settings::save(const std::string &filename)
     settingsTree.put("Universe.height",           universeHeight   );
     settingsTree.put("Universe.width",            universeWidth    );
     settingsTree.put("Universe.generationPeriod", generationPeriod );
+    settingsTree.put("Graphic.historyDeep",       historyDeep      );
     settingsTree.put("Universe.cycled",           cycled           );
 
 

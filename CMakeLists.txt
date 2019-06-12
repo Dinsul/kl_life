@@ -4,7 +4,7 @@ project(life)
 
 set(PROJECT_VERSION_MAJOR "0")
 set(PROJECT_VERSION_MINOR "1")
-set(PROJECT_VERSION_PATCH "2")
+set(PROJECT_VERSION_PATCH "3")
 
 if ($ENV{TRAVIS_BUILD_NUMBER})
     set(PROJECT_VERSION_TWEAK $ENV{TRAVIS_BUILD_NUMBER})
@@ -108,3 +108,4 @@ enable_testing()
 
 add_test(test_all "${CMAKE_BINARY_DIR}/bin/test_run" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_settings" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

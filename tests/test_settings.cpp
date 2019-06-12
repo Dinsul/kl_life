@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE test_AlphaMath
+#define BOOST_TEST_MODULE test_life
 
 #include "settings.h"
 #include "info.h"

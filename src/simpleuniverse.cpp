@@ -1,19 +1,16 @@
 #include "simpleuniverse.h"
 #include "logger.h"
-#include "settings.h"
 
 #include "chrono"
 
 #include <SFML/Graphics.hpp>
 
-void cgl::SimpleUniverse::checkCells()
+void cgl::SimpleUniverse::refresh()
 {
     quick_trace();
 
     _inhabitants.clear();
     _challengerForBorn.clear();
-
-    auto &settings = Settings::get();
 
     for (int x = 0; x < _width; ++x)
     {
@@ -38,7 +35,7 @@ void cgl::SimpleUniverse::checkCells()
 
                         if (ny >= _height || nx >= _width || ny < 0 || nx < 0)
                         {
-                            if (!settings.cycled)
+                            if (!_cycled)
                             {
                                 continue;
                             }
@@ -71,10 +68,8 @@ void cgl::SimpleUniverse::checkCells()
     }
 }
 
-
-cgl::SimpleUniverse::SimpleUniverse()
-    : _width(Settings::get().universeWidth),
-      _height(Settings::get().universeHeight)
+cgl::SimpleUniverse::SimpleUniverse(bool cycled, int width, int height)
+    : Universe(width, height), _cycled(cycled)
 {
     quick_trace();
 
@@ -88,6 +83,7 @@ cgl::SimpleUniverse::SimpleUniverse()
     clear();
 }
 
+
 cgl::SimpleUniverse::~SimpleUniverse()
 {
     for (int x = 0; x < _width; ++x)
@@ -96,14 +92,6 @@ cgl::SimpleUniverse::~SimpleUniverse()
     }
 
     delete []  _map;
-}
-
-int cgl::SimpleUniverse::width()    { return _width;  }
-int cgl::SimpleUniverse::height()   { return _height; }
-
-void cgl::SimpleUniverse::refresh()
-{
-    checkCells();
 }
 
 void cgl::SimpleUniverse::clear()
@@ -121,7 +109,7 @@ void cgl::SimpleUniverse::nextGeneration()
 {
     quick_trace();
 
-    checkCells();
+    refresh();
 
     for (auto & cell : _inhabitants)
     {
@@ -138,7 +126,6 @@ void cgl::SimpleUniverse::nextGeneration()
             _map[cell.first.x][cell.first.y] = 1;
         }
     }
-
 }
 
 void cgl::SimpleUniverse::addCell(const cgl::Position &pos)

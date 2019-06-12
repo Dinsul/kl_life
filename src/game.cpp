@@ -4,6 +4,9 @@
 #include <thread>
 #include <chrono>
 
+#include <algorithm>
+#include <list>
+
 #include "game.h"
 #include "settings.h"
 #include "logger.h"
@@ -12,6 +15,7 @@
 Game::Game(sf::RenderWindow &window, cgl::Universe &universe)
     : _isPlaying(false),
       _isPause(true),
+      _isEnd(false),
       _window(window),
       _universe(universe),
       _settings(cgl::Settings::get()),
@@ -38,6 +42,8 @@ void Game::run()
 
     _isPlaying = true;
 
+    std::list<cgl::uniqList<cgl::Position> > history;
+
     while (_isPlaying)
     {
         _getPlayersControl();
@@ -50,10 +56,26 @@ void Game::run()
             {
                 _universe.nextGeneration();
 
+                auto curUniverse = _universe.inhabitants();
+
+                if (std::find(history.begin(), history.end(), curUniverse) !=  history.end())
+                {
+                    _isPause = true;
+                    _isEnd   = true;
+                }
+                else
+                {
+                    history.push_front(curUniverse);
+                }
+
+                if (history.size() > _settings.historyDeep)
+                {
+                    history.pop_back();
+                }
+
                 _updateTimer->restart();
             }
         }
-
 
         if (_drawTimer->getElapsedTime().asMilliseconds() >= _settings.drawPeriod)
         {
@@ -71,6 +93,8 @@ void Game::stop()
 
 void Game::_doDraw()
 {
+    quick_trace();
+
     _window.setView(*_viewMain);
     _window.clear();
 
@@ -81,14 +105,20 @@ void Game::_doDraw()
     _drawStatus();
 
     _window.display();
+
+    auto now = std::chrono::steady_clock::now();
+    static decltype (now) old;
+
+    auto elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>(now - old);
+
+    old = now;
+
+    cgl::Logger::debug(cgl::makeStr("Time of draw", elapsed_us.count(), "µs"));
 }
 
 
 void Game::_drawMainScreen()
 {
-    quick_trace();
-    auto begin = std::chrono::steady_clock::now();
-
     auto cellSize = static_cast<float>(_settings.cellSize);
     auto width    = static_cast<float>(_universe.width()) * cellSize;
     auto height   = static_cast<float>(_universe.height()) * cellSize;
@@ -114,27 +144,25 @@ void Game::_drawMainScreen()
         _window.draw(inhabitant);
     }
 
-    sf::RectangleShape line;
-    line.setFillColor(sf::Color{_settings.gridColor});
+    if (_settings.cellSize > 4)
+    {
+        sf::RectangleShape line;
+        line.setFillColor(sf::Color{_settings.gridColor});
 
-    line.setSize(sf::Vector2f{width, 1.f});
-    for (float y = cellSize; y < height; y += cellSize) {
-        line.setPosition(0.f, y);
+        line.setSize(sf::Vector2f{width, 1.f});
+        for (float y = cellSize; y < height; y += cellSize) {
+            line.setPosition(0.f, y);
 
-        _window.draw(line);
+            _window.draw(line);
+        }
+
+        line.setSize(sf::Vector2f{1.f, height});
+        for (float x = cellSize; x < width; x += cellSize) {
+            line.setPosition(x, 0.f);
+
+            _window.draw(line);
+        }
     }
-
-    line.setSize(sf::Vector2f{1.f, height});
-    for (float x = cellSize; x < width; x += cellSize) {
-        line.setPosition(x, 0.f);
-
-        _window.draw(line);
-    }
-    auto end = std::chrono::steady_clock::now();
-
-    auto elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-
-    cgl::Logger::debug(cgl::makeStr("Time of draw", elapsed_us.count(), "µs"));
 }
 
 void Game::_drawStatus()
@@ -149,9 +177,8 @@ void Game::_drawStatus()
     sf::Text *text = new sf::Text();
     sf::Font *font = new sf::Font();
 
-    float linePos = 25;
 
-    if (!font->loadFromFile("/home/denis/projects/life/data/Casatus.ttf"))
+    if (!font->loadFromFile("../../data/Casatus.ttf"))
     {
         delete font;
         delete text;
@@ -163,15 +190,14 @@ void Game::_drawStatus()
     text->setFont(*font);
 
     text->setCharacterSize(20);
-    text->setPosition(10, linePos);
+    text->setPosition(10, 25);
     text->setFillColor(sf::Color::White);
     text->setString(L"Управление:");
 
     _window.draw(*text);
 
-    linePos += 30;
     text->setCharacterSize(15);
-    text->setPosition(10, linePos);
+    text->setPosition(10, 55);
     text->setFillColor(sf::Color{0xCFCFCFFF});
     text->setString(L"MouseLeft - оживить ячейку\n"
                     "MouseRight - убить ячейку\n"
@@ -180,10 +206,97 @@ void Game::_drawStatus()
                     "A\t- переместить поле налево\n"
                     "S\t- переместить поле вниз\n"
                     "D\t- переместить поле направо\n"
+                    "+\t- увеличить размер ячейки\n"
+                    "-\t- уменьшить размер ячейки\n"
                     "Space\t- запустить/остановить\n"
+                    "Enter - сделать один шаг эволюции\n"
+                    "Delete или BackSpace - очистить\n"
                     "Escape\t- выйти\n"
-                    "Delete или\n"
-                    "BackSpace\t- очистить\n");
+                    );
+
+    _window.draw(*text);
+
+    if (_isEnd)
+    {
+        std::wstring msg = L"Все обитатели вымерли:";
+        float offset;
+
+        if (_universe.inhabitants().empty())
+        {
+            text->setFillColor(sf::Color::Red);
+            msg = L"Все обитатели вымерли!";
+            offset = 95;
+        }
+        else
+        {
+            text->setFillColor(sf::Color::Green);
+            msg = L"Вы получили замкнутую систему";
+            offset = 120;
+        }
+
+        text->setCharacterSize(25);
+        text->setPosition(_viewMenu->getSize().x / 2 - 35, 270);
+        text->setString(L"Конец");
+
+        _window.draw(*text);
+
+        text->setCharacterSize(15);
+        text->setPosition(_viewMenu->getSize().x / 2 - offset, 300);
+        text->setString(msg);
+
+        _window.draw(*text);
+
+    }
+    else if (_isPause)
+    {
+        text->setCharacterSize(25);
+        text->setPosition(_viewMenu->getSize().x / 2 - 33, 280);
+        text->setFillColor(sf::Color::Green);
+        text->setString(L"Пауза");
+
+        _window.draw(*text);
+    }
+    else
+    {
+        text->setCharacterSize(25);
+        text->setPosition(_viewMenu->getSize().x / 2 - 50, 280);
+        text->setFillColor(sf::Color{0x1FFF1FFF});
+        text->setString(L"Эволюция!");
+
+        _window.draw(*text);
+    }
+
+    text->setCharacterSize(15);
+    text->setPosition(10, 310);
+    text->setFillColor(sf::Color{0xCFCFCFFF});
+
+    std::wstring wstatus;
+    wstatus.append(L"\nКолличество обитателей: ");
+    wstatus.append(std::to_wstring(_universe.inhabitants().size()));
+
+    wstatus.append(L"\nРазмер поля: ");
+    wstatus.append(std::to_wstring(_universe.width()));
+    wstatus.append(L"×");
+    wstatus.append(std::to_wstring(_universe.height()));
+
+    if (_settings.cycled)
+    {
+        wstatus.append(L" замкнуто");
+    }
+
+    wstatus.append(L"\nРазмер ячейки: ");
+    wstatus.append(std::to_wstring(_settings.cellSize));
+
+    std::wstringstream evFrequency;
+
+    evFrequency.setf(std::ios::fixed);
+    evFrequency.precision(2);
+    evFrequency << L"\nСкорость эволюции: " << 1000. / _settings.generationPeriod
+                << L" пок-й/с";
+
+    wstatus.append(evFrequency.str());
+
+    text->setString(wstatus);
 
     _window.draw(*text);
 
@@ -222,6 +335,12 @@ void Game::_getPlayersControl()
                 stop();
                 break;
 
+            case sf::Keyboard::Key::Enter:
+                _universe.nextGeneration();
+                _isPause = true;
+                _universe.refresh();
+                break;
+
             case sf::Keyboard::Key::Delete:
             case sf::Keyboard::Key::BackSpace:
                 _universe.clear();
@@ -244,30 +363,44 @@ void Game::_getPlayersControl()
                 _viewMain->move(-5.f, 0);
                 break;
 
+            case sf::Keyboard::Key::PageUp:
+                if (_settings.generationPeriod > 11)
+                {
+                    _settings.generationPeriod -= 5;
+                }
+                break;
+
+            case sf::Keyboard::Key::PageDown:
+                if (_settings.generationPeriod < (100000 - 10))
+                {
+                    _settings.generationPeriod += 5;
+                }
+                break;
+
             case sf::Keyboard::Key::Subtract:
-            {
-                auto center = _viewMain->getCenter();
-                auto delta  = 2.f / static_cast<float>(_settings.cellSize) + 1.f;
+                if (_settings.cellSize > 4)
+                {
+                    auto center = _viewMain->getCenter();
 
-                _settings.cellSize -= 2;
+                    _settings.cellSize -= 1;
 
-                center.x /= delta;
-                center.y /= delta;
-                _viewMain->setCenter(center);
-            }
+                    center.x = (center.x / (_settings.cellSize + 1)) * _settings.cellSize;
+                    center.y = (center.y / (_settings.cellSize + 1)) * _settings.cellSize;
+                    _viewMain->setCenter(center);
+                }
                 break;
 
             case sf::Keyboard::Key::Add:
-            {
-                auto center = _viewMain->getCenter();
-                auto delta  = 2.f / static_cast<float>(_settings.cellSize) + 1.f;
+                if (_settings.cellSize < 30)
+                {
+                    auto center = _viewMain->getCenter();
 
-                _settings.cellSize += 2;
+                    _settings.cellSize += 1;
 
-                center.x *= delta;
-                center.y *= delta;
-                _viewMain->setCenter(center);
-            }
+                    center.x = (center.x / (_settings.cellSize - 1)) * _settings.cellSize;
+                    center.y = (center.y / (_settings.cellSize - 1)) * _settings.cellSize;
+                    _viewMain->setCenter(center);
+                }
                 break;
 
             default:
@@ -281,6 +414,7 @@ void Game::_getPlayersControl()
             {
             case sf::Mouse::Button::Left:
                 _mouseState = MouseState::pushCell;
+                _isEnd      = false;
                 break;
 
             case sf::Mouse::Button::Middle:
@@ -289,6 +423,7 @@ void Game::_getPlayersControl()
 
             case sf::Mouse::Button::Right:
                 _mouseState = MouseState::popCell;
+                _isEnd      = false;
                 break;
 
             default:

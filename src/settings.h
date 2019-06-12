@@ -52,11 +52,8 @@ public:
     std::string logPath;
 
     // Отображение
-    int  mainFrameHeight;
-    int  mainFrameWidth;
     int  cellSize;
     int  drawPeriod;
-    int  scale;
     uint32_t inhabitantColor;
     uint32_t backGroundColor;
     uint32_t gridColor;
@@ -65,6 +62,7 @@ public:
     int  universeHeight;
     int  universeWidth;
     int  generationPeriod;
+    unsigned int  historyDeep;
     bool cycled;
 
     static Settings &get();

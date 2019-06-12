@@ -8,6 +8,7 @@
 //!
 
 #include <map>
+#include <algorithm>
 
 namespace cgl {
 
@@ -27,6 +28,12 @@ struct Position
         return false;
     }
 
+    Position(int x_ = 0, int y_ = 0) : x(x_), y(y_) {}
+
+    bool operator == (const Position &other) const
+    {
+        return this->x == other.x && this->y == other.y;
+    }
 };
 
 template <class T>
@@ -38,13 +45,23 @@ public:
         return  ++(*this)[value];
     }
 
-    size_t countOf(const T& value)
+    size_t countOf(const T& value) const
     {
         try {
             return this->at(value);
         } catch (...) {
             return 0;
         }
+    }
+
+    bool operator == (const uniqList<T> &other) const
+    {
+        if (this->size() != other.size())
+        {
+            return false;
+        }
+
+        return std::equal(this->begin(), this->end(), other.begin(), other.end());
     }
 };
 

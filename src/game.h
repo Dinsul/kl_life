@@ -21,6 +21,7 @@ class Game
 private:
     bool _isPlaying;
     bool _isPause;
+    bool _isEnd;
 
     sf::RenderWindow &_window;
     cgl::Universe    &_universe;

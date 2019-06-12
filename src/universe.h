@@ -16,6 +16,8 @@ namespace cgl {
 class Universe
 {
 protected:
+    int _width;
+    int _height;
     //!
     //! \brief _inhabitants
     //! Содержит пары значений координата обитателя и количество соседей
@@ -23,9 +25,11 @@ protected:
     uniqList<Position> _inhabitants;
 
 public:
+    Universe(int width = 50, int height = 50);
+
     virtual ~Universe();
-    virtual int  height()  = 0;
-    virtual int  width()   = 0;
+    virtual int  height();
+    virtual int  width();
     virtual void refresh() = 0;
     virtual void clear()   = 0;
 
