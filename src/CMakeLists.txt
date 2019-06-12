@@ -25,7 +25,7 @@ else()
     message("Boost not found!!!")
 endif()
 
-find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+find_package(SFML 2 REQUIRED COMPONENTS graphics window system)
 
 if(SFML_FOUND)
     target_include_directories("${PROJECT_NAME}" PUBLIC ${SFML_INCLUDE_DIR})
