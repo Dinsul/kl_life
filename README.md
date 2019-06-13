@@ -13,7 +13,6 @@ https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 Для успешной сборки понадобится SFML-2.5.1, cmake версии 3.10 и manager пакетов conan версии 1.10.
 Остальные зависимости: Boost-1.69 и spdlog-1.2.1 установятся автоматически (с помощью conan)
 
-
 ## Сборка
 
 Для сборки понадобится скачать SFML-2.5.1 [ссылка на официальный сайт](https://www.sfml-dev.org/download.php),
@@ -42,6 +41,7 @@ cmake --build .
 
 ``` cmake --build . --target package ```
 
+## Запуск
 
 
 ## Управление

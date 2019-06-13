@@ -41,7 +41,26 @@ target_link_libraries(${PROJECT_NAME}
     "${CONAN_LIBS}" "sfml-system" "sfml-graphics" "sfml-window"
     )
 
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+install(TARGETS "${PROJECT_NAME}"
+    RUNTIME
+    DESTINATION bin)
+
+#install(TARGETS
+#    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-graphics.so.2.5.1"
+#    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-system.so.2.5.1"
+#    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-window.so.2.5.1"
+
+#    LIBRARY
+#    DESTINATION lib
+#    COMPONENT Libraries)
+
+install(FILES
+    "${PROJECT_SOURCE_DIR}/data/Casatus.ttf"
+    DESTINATION "${FONTS_DIR}"
+    COMPONENT Data)
+
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-window (>= 2.4.0), libsfml-system (>= 2.4.0), libsfml-graphics (>= 2.4.0)")
 
 if(UNIX AND NOT APPLE)
     set(CPACK_GENERATOR DEB)

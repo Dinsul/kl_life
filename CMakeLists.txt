@@ -19,6 +19,8 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
                    "${CMAKE_BINARY_DIR}/conan.cmake")
 endif()
 
+set(FONTS_DIR "/usr/share/fonts/truetype/")
+
 include("${CMAKE_BINARY_DIR}/conan.cmake")
 
 message(STATUS "Run 'conan install ...'")

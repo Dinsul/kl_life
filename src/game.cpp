@@ -13,6 +13,7 @@
 #include "settings.h"
 #include "logger.h"
 #include "universe.h"
+#include "info.h"
 
 Game::Game(sf::RenderWindow &window, cgl::Universe &universe)
     : _isPlaying(false),
@@ -169,18 +170,11 @@ void Game::_drawMainScreen()
 
 void Game::_drawStatus()
 {
-    //    sf::RectangleShape backGround;
-
-    //    backGround.setFillColor(sf::Color{_settings.backGroundColor});
-    //    backGround.setSize(sf::Vector2f{300, 300});
-    //    backGround.setPosition(0,0);
-    //    _window.draw(backGround);
-
     sf::Text *text = new sf::Text();
     sf::Font *font = new sf::Font();
 
 
-    if (!font->loadFromFile("../../data/Casatus.ttf"))
+    if (!font->loadFromFile(FONTS_DIR"Casatus.ttf"))
     {
         delete font;
         delete text;
