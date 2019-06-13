@@ -7,8 +7,10 @@ set(PROJECT_VERSION_MINOR "1")
 
 if ($ENV{TRAVIS_BUILD_NUMBER})
     set(PROJECT_VERSION_PATCH $ENV{TRAVIS_BUILD_NUMBER})
+    set(FONTS_DIR "/usr/share/fonts/truetype/")
 else ()
     set(PROJECT_VERSION_PATCH 0)
+    set(FONTS_DIR "../../data/")
 endif ()
 
 set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_TWEAK})
@@ -19,7 +21,6 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
                    "${CMAKE_BINARY_DIR}/conan.cmake")
 endif()
 
-set(FONTS_DIR "/usr/share/fonts/truetype/")
 
 include("${CMAKE_BINARY_DIR}/conan.cmake")
 

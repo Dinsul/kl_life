@@ -60,7 +60,7 @@ install(FILES
     DESTINATION "${FONTS_DIR}"
     COMPONENT Data)
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.4.0)")
+#set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.4.0)")
 
 if(UNIX AND NOT APPLE)
     set(CPACK_GENERATOR DEB)
