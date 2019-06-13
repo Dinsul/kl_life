@@ -3,8 +3,6 @@
 
 #include "chrono"
 
-#include <SFML/Graphics.hpp>
-
 void cgl::SimpleUniverse::refresh()
 {
     quick_trace();

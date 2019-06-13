@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-include_directories("${PROJECT_SOURCE_DIR}/src" ${CONAN_INCLUDE_DIRS})
+include_directories("${PROJECT_SOURCE_DIR}/src"
+    ${CONAN_INCLUDE_DIRS}
+    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/include")
+
+link_directories("${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib")
 
 configure_file("${PROJECT_SOURCE_DIR}/info.h.in" "${PROJECT_SOURCE_DIR}/src/info.h")
 
@@ -27,7 +31,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" ST
 endif()
 
 target_link_libraries(${PROJECT_NAME}
-    "${CONAN_LIBS}" "sfml-graphics" "sfml-window"
+    "${CONAN_LIBS}" "sfml-system" "sfml-graphics" "sfml-window"
     )
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

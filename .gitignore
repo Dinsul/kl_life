@@ -1,6 +1,7 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
+SFML-2.5.1/
 debug/
 release/
 Debug/

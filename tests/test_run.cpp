@@ -6,7 +6,7 @@
 
 BOOST_AUTO_TEST_SUITE(test_suite_run)
 
-BOOST_AUTO_TEST_CASE(test_all)
+BOOST_AUTO_TEST_CASE(test_run)
 {
     BOOST_CHECK(true);
 }

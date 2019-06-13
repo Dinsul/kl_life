@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(life)
 
 set(PROJECT_VERSION_MAJOR "1")
-set(PROJECT_VERSION_MINOR "0")
+set(PROJECT_VERSION_MINOR "1")
 set(PROJECT_VERSION_PATCH "0")
 
 if ($ENV{TRAVIS_BUILD_NUMBER})
@@ -27,7 +27,6 @@ message(STATUS "Run 'conan install ...'")
 conan_cmake_run(REQUIRES
     boost/1.69.0@conan/stable
     spdlog/1.2.1@bincrafters/stable
-    sfml/2.5.0@bincrafters/stable
 
     OPTIONS
     boost:shared=False
@@ -58,31 +57,33 @@ conan_cmake_run(REQUIRES
     boost:without_timer=True
     boost:without_math=True
 
-    sfml:audio=False
-    sfml:network=False
-
     BASIC_SETUP CMAKE_TARGETS
     BUILD missing)
 
 include(${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-cmake_policy(PUSH)
-cmake_policy(SET CMP0057 NEW)
-
 find_package(Doxygen)
 
-set(DOXYGEN_HAVE_DOT YES)
-set(DOXYGEN_EXTRACT_ALL YES)
-set(DOXYGEN_GENERATE_LATEX YES)
-set(DOXYGEN_LATEX_MAKEINDEX_CMD YES)
-set(DOXYGEN_PROJECT_LOGO "${CMAKE_SOURCE_DIR}/logo.png")
-set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/doc")
-set(DOXYGEN_OUTPUT_LANGUAGE "Russian")
+if (Doxygen_FOUND)
 
-doxygen_add_docs(doc "${PROJECT_SOURCE_DIR}")
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0057 NEW)
 
-cmake_policy(POP)
+
+    set(DOXYGEN_HAVE_DOT YES)
+    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_GENERATE_LATEX YES)
+    set(DOXYGEN_LATEX_MAKEINDEX_CMD YES)
+#    set(DOXYGEN_PROJECT_LOGO "${CMAKE_SOURCE_DIR}/logo.png")
+    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/doc")
+    set(DOXYGEN_OUTPUT_LANGUAGE "Russian")
+
+    doxygen_add_docs(doc "${PROJECT_SOURCE_DIR}")
+
+    cmake_policy(POP)
+
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -108,4 +109,6 @@ enable_testing()
 
 add_test(test_all "${CMAKE_BINARY_DIR}/bin/test_run" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_settings" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-add_test(test_save_load "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(test_main  "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(test_equal "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(test_logic "${CMAKE_BINARY_DIR}/bin/test_simpleuniverse" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
