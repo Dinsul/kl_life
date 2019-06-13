@@ -4,7 +4,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src"
     ${CONAN_INCLUDE_DIRS}
     "${PROJECT_SOURCE_DIR}/SFML-2.5.1/include")
 
-link_directories("${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib")
+link_directories(${CONAN_LIB_DIRS} "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib")
 
 configure_file("${PROJECT_SOURCE_DIR}/info.h.in" "${PROJECT_SOURCE_DIR}/src/info.h")
 
@@ -18,6 +18,12 @@ add_executable("${PROJECT_NAME}"
     "${PROJECT_SOURCE_DIR}/src/game.cpp"
     )
 
+
+target_link_libraries(${PROJECT_NAME}
+    "${CONAN_LIBS}" "sfml-system" "sfml-graphics" "sfml-window"
+    )
+
+
 if (WIN32)
     configure_file("${PROJECT_SOURCE_DIR}/resources.rc.in" "${PROJECT_SOURCE_DIR}/src/resources.rc")
 
@@ -29,6 +35,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" ST
         COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
         )
 endif()
+
 
 target_link_libraries(${PROJECT_NAME}
     "${CONAN_LIBS}" "sfml-system" "sfml-graphics" "sfml-window"
