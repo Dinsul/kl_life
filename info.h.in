@@ -4,5 +4,6 @@
 #define PRJ_NAME "@PROJECT_NAME@"
 
 #ifdef __unix
-#define FONTS_DIR "@FONTS_DIR@"
+#define FONTS_DIR "@PRJ_INSTALL_DIR@"
+#define DATA_DIR "@PRJ_INSTALL_DIR@"
 #endif

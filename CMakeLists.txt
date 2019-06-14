@@ -7,11 +7,19 @@ set(PROJECT_VERSION_MINOR "1")
 
 if ($ENV{TRAVIS_BUILD_NUMBER})
     set(PROJECT_VERSION_PATCH $ENV{TRAVIS_BUILD_NUMBER})
-    set(FONTS_DIR "/usr/share/fonts/truetype/")
+
+    if (WIN32)
+        set(PRJ_INSTALL_DIR "$ENV{PROGRAMFILES}/${PROJECT_NAME}/")
+    elseif(UNIX AND NOT APPLE)
+        set(PRJ_INSTALL_DIR "/usr/games/${PROJECT_NAME}/")
+    endif()
+
 else ()
     set(PROJECT_VERSION_PATCH 0)
-    set(FONTS_DIR "../../data/")
+    set(PRJ_INSTALL_DIR "../../data/")
 endif ()
+
+set(PROJECT_VERSION_TWEAK "0")
 
 set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_TWEAK})
 

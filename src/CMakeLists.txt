@@ -46,6 +46,12 @@ install(TARGETS "${PROJECT_NAME}"
     RUNTIME
     DESTINATION bin)
 
+install(FILES
+    "${PROJECT_SOURCE_DIR}/data/Casatus.ttf"
+    "${PROJECT_SOURCE_DIR}/data/lset.png"
+    DESTINATION "${PRJ_INSTALL_DIR}"
+    COMPONENT Data)
+
 #install(TARGETS
 #    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-graphics.so.2.5.1"
 #    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-system.so.2.5.1"
@@ -54,11 +60,6 @@ install(TARGETS "${PROJECT_NAME}"
 #    LIBRARY
 #    DESTINATION lib
 #    COMPONENT Libraries)
-
-install(FILES
-    "${PROJECT_SOURCE_DIR}/data/Casatus.ttf"
-    DESTINATION "${FONTS_DIR}"
-    COMPONENT Data)
 
 #set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.4.0)")
 
