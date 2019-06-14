@@ -2,6 +2,7 @@
 
 #include "settings.h"
 #include "info.h"
+#include "logger.h"
 
 #include <iostream>
 
@@ -12,7 +13,7 @@ BOOST_AUTO_TEST_SUITE(test_suite_settings)
 
 BOOST_AUTO_TEST_CASE(test_save_load)
 {
-    std::string defaultFilename(PRJ_NAME".ini");
+    auto defaultFilename = cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/settings.ini");
 
     boost::filesystem::path iniPath{defaultFilename};
 
@@ -27,31 +28,45 @@ BOOST_AUTO_TEST_CASE(test_save_load)
     // Будет соответствующее сообщение
     auto &ls = cgl::Settings::get();
 
-    std::cout << ls.logPath << std::endl;
-    // Проверяем значение поумолчанию
-    BOOST_CHECK(ls.logPath == "log");
 
-    // Меняем значение
-    ls.logPath = "MyLog";
+    // Проверяем значения поумолчанию
+    BOOST_CHECK(ls.universeHeight == 200);
+    BOOST_CHECK(ls.universeWidth == 200);
+    BOOST_CHECK(ls.generationPeriod == 100);
 
-    BOOST_CHECK(ls.logPath == "MyLog");
+    // Меняем значеничения
+    ls.universeHeight = 30;
+    ls.universeWidth = 30;
+    ls.generationPeriod = 200;
+
+    BOOST_CHECK(ls.universeHeight == 30);
+    BOOST_CHECK(ls.universeWidth == 30);
+    BOOST_CHECK(ls.generationPeriod == 200);
 
     // Возвращаем значение поумолчанию
     // Здесь файл поумолчанью всё ещё отсутствует
     // Будет соответствующее сообщение
     ls.load();
 
-    BOOST_CHECK(ls.logPath == "log");
+    BOOST_CHECK(ls.universeHeight == 200);
+    BOOST_CHECK(ls.universeWidth == 200);
+    BOOST_CHECK(ls.generationPeriod == 100);
 
     // Сохраняем изменённое значение
-    ls.logPath = "MyLog";
+    ls.universeHeight = 30;
+    ls.universeWidth = 30;
+    ls.generationPeriod = 200;
     ls.save();
+
+    // Файл настроек должен был создасться после сохранения
+    BOOST_CHECK(boost::filesystem::exists(iniPath));
+
     ls.load();
 
-    BOOST_CHECK(ls.logPath == "MyLog");
+    BOOST_CHECK(ls.universeHeight == 30);
+    BOOST_CHECK(ls.universeWidth == 30);
+    BOOST_CHECK(ls.generationPeriod == 200);
 
-    // Файл поумолцанию должен был создасться после сохранения
-    BOOST_CHECK(boost::filesystem::exists(iniPath));
 }
 
 
