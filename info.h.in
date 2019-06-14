@@ -3,7 +3,5 @@
 #define PRJ_VERSION "@PROJECT_VERSION@"
 #define PRJ_NAME "@PROJECT_NAME@"
 
-#ifdef __unix
 #define FONTS_DIR "@PRJ_INSTALL_DIR@"
 #define DATA_DIR "@PRJ_INSTALL_DIR@"
-#endif

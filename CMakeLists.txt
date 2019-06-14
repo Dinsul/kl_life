@@ -9,7 +9,7 @@ if ($ENV{TRAVIS_BUILD_NUMBER})
     set(PROJECT_VERSION_PATCH $ENV{TRAVIS_BUILD_NUMBER})
 
     if (WIN32)
-        set(PRJ_INSTALL_DIR "$ENV{PROGRAMFILES}/${PROJECT_NAME}/")
+        set(PRJ_INSTALL_DIR "./")
     elseif(UNIX AND NOT APPLE)
         set(PRJ_INSTALL_DIR "/usr/games/${PROJECT_NAME}/")
     endif()

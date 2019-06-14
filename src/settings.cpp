@@ -8,6 +8,13 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem.hpp>
 
+#ifdef WIN32
+    static std::string iniFileDefault = "settings.ini";
+    static std::string logPathDefalt  = "log";
+#else
+    static auto iniFileDefault = cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/settings.ini");
+    static auto logPathDefalt  = cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/log");
+#endif
 
 cgl::Settings::Settings()
 {
@@ -27,7 +34,6 @@ void cgl::Settings::load(const std::string &filename)
          std::cerr << "Error: can not load log settings." << std::endl;
     }
 
-    auto logPathDefalt = cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/log");
 
     // Журналирование
 //    logLevel    = settingsTree.get<LogLevel> ("LogSettings.logLevel",    LogLevel::info);
@@ -54,7 +60,7 @@ void cgl::Settings::load(const std::string &filename)
 
 void cgl::Settings::load()
 {
-    load(cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/settings.ini"));
+    load(iniFileDefault);
 }
 
 void cgl::Settings::save(const std::string &filename)
@@ -95,7 +101,7 @@ void cgl::Settings::save(const std::string &filename)
 
 void cgl::Settings::save()
 {
-    save(cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/settings.ini"));
+    save(iniFileDefault);
 }
 
 cgl::Settings &cgl::Settings::get()

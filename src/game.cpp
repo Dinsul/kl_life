@@ -157,20 +157,20 @@ void Game::_drawMainScreen()
             switch (cell.second)
             {
             case 1:
-                inhabitant.setTextureRect({18, 0, 36, 18});
+                inhabitant.setTextureRect({21, 1, 39, 19});
                 break;
 
             case 2:
-                inhabitant.setTextureRect({18, 18, 36, 36});
+                inhabitant.setTextureRect({21, 21, 39, 39});
                 break;
 
             case 3:
             case 4:
-                inhabitant.setTextureRect({0, 0, 18, 18});
+                inhabitant.setTextureRect({1, 1, 19, 19});
                 break;
 
             default:
-                inhabitant.setTextureRect({0, 18, 18, 36});
+                inhabitant.setTextureRect({1, 21, 19, 39});
                 break;
             }
 
