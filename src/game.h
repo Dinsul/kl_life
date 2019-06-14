@@ -9,6 +9,7 @@ namespace sf {
 class RenderWindow;
 class Clock;
 class View;
+class Texture;
 }
 
 namespace cgl {
@@ -22,6 +23,7 @@ private:
     bool _isPlaying;
     bool _isPause;
     bool _isEnd;
+    bool _smiles;
 
     sf::RenderWindow &_window;
     cgl::Universe    &_universe;
@@ -39,6 +41,7 @@ private:
     std::unique_ptr<sf::Clock> _gameTime;
     std::unique_ptr<sf::View>  _viewMain;
     std::unique_ptr<sf::View>  _viewMenu;
+    std::unique_ptr<sf::Texture>  _texture;
 
 
     void _doDraw(void);

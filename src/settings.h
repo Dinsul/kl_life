@@ -52,6 +52,7 @@ public:
     std::string logPath;
 
     // Отображение
+    bool smiles;
     int  cellSize;
     int  drawPeriod;
     uint32_t inhabitantColor;

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
+#include <boost/filesystem.hpp>
+
 
 cgl::Settings::Settings()
 {
@@ -25,19 +27,22 @@ void cgl::Settings::load(const std::string &filename)
          std::cerr << "Error: can not load log settings." << std::endl;
     }
 
+    auto logPathDefalt = cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/log");
+
     // Журналирование
 //    logLevel    = settingsTree.get<LogLevel> ("LogSettings.logLevel",    LogLevel::info);
     logToFile   = settingsTree.get<bool>          ("LogSettings.logToFile",     true);
     logToStdout = settingsTree.get<bool>          ("LogSettings.logToStdout",   false);
     logLast     = settingsTree.get<bool>          ("LogSettings.logLast",       false);
-    logPath     = settingsTree.get<std::string>   ("LogSettings.logPath",       "log");
+    logPath     = settingsTree.get<std::string>   ("LogSettings.logPath",       logPathDefalt);
 
     // Отображение
+    smiles           = settingsTree.get<bool>     ("Graphic.smiles",            true);
     cellSize         = settingsTree.get<int>      ("Graphic.cellSize",          10);
     drawPeriod       = settingsTree.get<int>      ("Graphic.drawPeriod",        42);
-    inhabitantColor  = settingsTree.get<uint32_t> ("Universe.inhabitantColor",  0xFF0000FF);
+    inhabitantColor  = settingsTree.get<uint32_t> ("Universe.inhabitantColor",  0xFFA030FF);
     backGroundColor  = settingsTree.get<uint32_t> ("Universe.backGroundColor",  0xFFFFFFFF);
-    gridColor        = settingsTree.get<uint32_t> ("Universe.gridColor",        0x0000FFFF);
+    gridColor        = settingsTree.get<uint32_t> ("Universe.gridColor",        0x8080F0FF);
 
     // Вселенная
     universeHeight   = settingsTree.get<int>      ("Universe.height",           200);
@@ -49,7 +54,7 @@ void cgl::Settings::load(const std::string &filename)
 
 void cgl::Settings::load()
 {
-    load(PRJ_NAME".ini");
+    load(cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/settings.ini"));
 }
 
 void cgl::Settings::save(const std::string &filename)
@@ -64,6 +69,7 @@ void cgl::Settings::save(const std::string &filename)
     settingsTree.put("LogSettings.logPath",       logPath          );
 
     // Отображение
+    settingsTree.put("Graphic.smiles",            smiles           );
     settingsTree.put("Graphic.cellSize",          cellSize         );
     settingsTree.put("Graphic.drawPeriod",        drawPeriod       );
     settingsTree.put("Universe.inhabitantColor",  inhabitantColor  );
@@ -89,7 +95,7 @@ void cgl::Settings::save(const std::string &filename)
 
 void cgl::Settings::save()
 {
-    save(PRJ_NAME".ini");
+    save(cgl::cat(getenv("HOME"), "/.", PRJ_NAME, "/settings.ini"));
 }
 
 cgl::Settings &cgl::Settings::get()

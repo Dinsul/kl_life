@@ -19,6 +19,7 @@ Game::Game(sf::RenderWindow &window, cgl::Universe &universe)
     : _isPlaying(false),
       _isPause(true),
       _isEnd(false),
+      _smiles(cgl::Settings::get().smiles),
       _window(window),
       _universe(universe),
       _settings(cgl::Settings::get()),
@@ -29,6 +30,17 @@ Game::Game(sf::RenderWindow &window, cgl::Universe &universe)
     _gameTime       = std::make_unique<sf::Clock>();
     _viewMain       = std::make_unique<sf::View>();
     _viewMenu       = std::make_unique<sf::View>();
+    _texture        = std::make_unique<sf::Texture>();
+
+    if (!_texture->loadFromFile(DATA_DIR"lset.png"))
+    {
+        _smiles = false;
+        cgl::Logger::error("Can not open texture file.");
+    }
+    else
+    {
+        _texture->setSmooth(true);
+    }
 
     _viewSetup();
 }
@@ -135,17 +147,56 @@ void Game::_drawMainScreen()
 
     _window.draw(backGround);
 
-    sf::RectangleShape inhabitant;
-
-    inhabitant.setFillColor(sf::Color{_settings.inhabitantColor});
-    inhabitant.setSize(sf::Vector2f{cellSize, cellSize});
-
-    for (auto & cell : _universe.inhabitants())
+    if (_smiles)
     {
-        inhabitant.setPosition(cell.first.x * cellSize, cell.first.y * cellSize);
+        sf::Sprite inhabitant{*_texture};
+        inhabitant.setColor(sf::Color{_settings.inhabitantColor});
 
-        _window.draw(inhabitant);
+        for (auto & cell : _universe.inhabitants())
+        {
+            switch (cell.second)
+            {
+            case 1:
+                inhabitant.setTextureRect({18, 0, 36, 18});
+                break;
+
+            case 2:
+                inhabitant.setTextureRect({18, 18, 36, 36});
+                break;
+
+            case 3:
+            case 4:
+                inhabitant.setTextureRect({0, 0, 18, 18});
+                break;
+
+            default:
+                inhabitant.setTextureRect({0, 18, 18, 36});
+                break;
+            }
+
+            inhabitant.setPosition({static_cast<float>(cell.first.x * cellSize),
+                                static_cast<float>(cell.first.y * cellSize)});
+
+            inhabitant.setScale({cellSize / 18.f, cellSize / 18.f});
+
+            _window.draw(inhabitant);
+        }
     }
+    else
+    {
+        sf::RectangleShape inhabitant;
+
+        inhabitant.setFillColor(sf::Color{_settings.inhabitantColor});
+        inhabitant.setSize(sf::Vector2f{cellSize, cellSize});
+
+        for (auto & cell : _universe.inhabitants())
+        {
+            inhabitant.setPosition(cell.first.x * cellSize, cell.first.y * cellSize);
+
+            _window.draw(inhabitant);
+        }
+    }
+
 
     if (_settings.cellSize > 4)
     {
