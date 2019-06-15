@@ -1,10 +1,41 @@
 cmake_minimum_required(VERSION 3.10)
 
-include_directories("${PROJECT_SOURCE_DIR}/src"
-    ${CONAN_INCLUDE_DIRS}
-    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/include")
+find_package(SFML)
 
-link_directories(${CONAN_LIB_DIRS} "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib")
+if (NOT SFML_FOUND)
+
+    if (NOT EXISTS "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/cmake/SFML/SFMLConfig.cmake")
+
+        if(UNIX)
+            message(STATUS "Downloading SFML")
+
+            if (APPLE)
+                file(DOWNLOAD "https://www.sfml-dev.org/files/SFML-2.5.1-macOS-clang.tar.gz"
+                    "${PROJECT_SOURCE_DIR}/SFML-2.5.1-macOS-clang.tar.gz")
+            else()
+                file(DOWNLOAD "https://www.sfml-dev.org/files/SFML-2.5.1-linux-gcc-64-bit.tar.gz"
+                    "${PROJECT_SOURCE_DIR}/SFML-2.5.1-linux-gcc-64-bit.tar.gz")
+            endif()
+
+            execute_process(COMMAND tar xvzf SFML-2.5.1-linux-gcc-64-bit.tar.gz SFML-2.5.1
+                WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}")
+
+            execute_process(COMMAND rm SFML-2.5.1-linux-gcc-64-bit.tar.gz
+                WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}")
+        endif()
+    endif()
+
+    set (SFML_DIR "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/cmake/SFML")
+
+    find_package(SFML COMPONENTS graphics window system)
+
+    link_directories("${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib")
+    include_directories("${PROJECT_SOURCE_DIR}/SFML-2.5.1/include")
+
+endif()
+
+link_directories(${CONAN_LIB_DIRS})
+include_directories("${PROJECT_SOURCE_DIR}/src" "${CONAN_INCLUDE_DIRS}")
 
 configure_file("${PROJECT_SOURCE_DIR}/info.h.in" "${PROJECT_SOURCE_DIR}/src/info.h")
 
@@ -47,11 +78,10 @@ install(FILES
     DESTINATION "${PRJ_INSTALL_DIR}"
     COMPONENT Data)
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.5.0)")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.4)")
 
 if(UNIX AND NOT APPLE)
     set(CPACK_GENERATOR DEB)
-    message("Package for linux generated as DEB")
 endif()
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")

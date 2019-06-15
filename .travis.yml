@@ -6,8 +6,6 @@ before_script:
 #- sudo apt install libboost-test-dev -y
 - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_10_0.deb
 - sudo dpkg -i conan-ubuntu-64_1_10_0.deb
-- wget https://www.sfml-dev.org/files/SFML-2.5.1-linux-gcc-64-bit.tar.gz
-- tar xvzf SFML-2.5.1-linux-gcc-64-bit.tar.gz
 script:
 - mkdir Release && cd Release
 - cmake .. -DCMAKE_BUILD_TYPE=Release
