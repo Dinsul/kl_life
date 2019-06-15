@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-find_package(SFML)
+find_package(SFML 2.5)
 
 if (NOT SFML_FOUND)
 
@@ -78,7 +78,7 @@ install(FILES
     DESTINATION "${PRJ_INSTALL_DIR}"
     COMPONENT Data)
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.4)")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.5)")
 
 if(UNIX AND NOT APPLE)
     set(CPACK_GENERATOR DEB)
