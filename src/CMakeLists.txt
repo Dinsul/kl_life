@@ -19,11 +19,6 @@ add_executable("${PROJECT_NAME}"
     )
 
 
-target_link_libraries(${PROJECT_NAME}
-    "${CONAN_LIBS}" "sfml-system" "sfml-graphics" "sfml-window"
-    )
-
-
 if (WIN32)
     configure_file("${PROJECT_SOURCE_DIR}/resources.rc.in" "${PROJECT_SOURCE_DIR}/src/resources.rc")
 
@@ -52,16 +47,7 @@ install(FILES
     DESTINATION "${PRJ_INSTALL_DIR}"
     COMPONENT Data)
 
-#install(TARGETS
-#    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-graphics.so.2.5.1"
-#    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-system.so.2.5.1"
-#    "${PROJECT_SOURCE_DIR}/SFML-2.5.1/lib/libsfml-window.so.2.5.1"
-
-#    LIBRARY
-#    DESTINATION lib
-#    COMPONENT Libraries)
-
-#set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.4.0)")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 2.5.0)")
 
 if(UNIX AND NOT APPLE)
     set(CPACK_GENERATOR DEB)
